@@ -3,12 +3,14 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
-
+const homeRoutes = require("./routes/home");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // chỉ định views nằm ở root
 app.set("view engine", "ejs");
+
+app.use("/", homeRoutes);
 
 app.use("/", authRoutes);
 
