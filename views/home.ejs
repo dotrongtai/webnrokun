@@ -1,5 +1,46 @@
 <%- include("partials/header", { title: "Trang chủ NRO KunZ" }) %>
 
+<style>
+  /* 🎆 Hiệu ứng Tết */
+  .tet {
+    pointer-events: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .tet span {
+    position: absolute;
+    top: -20px;
+    font-size: 22px;
+    opacity: 0.95;
+    animation: tetFall linear infinite;
+  }
+
+  @keyframes tetFall {
+    to {
+      transform: translateY(110vh) rotate(360deg);
+      opacity: 0.35;
+    }
+  }
+</style>
+
+<!-- 🎆 Hiệu ứng Tết: hoa đào + hoa mai + lì xì + spark -->
+<div class="tet">
+  <% const icons = ["🌸", "🌼", "🧧", "✨"]; %>
+  <% for (let i = 0; i < 45; i++) { %>
+    <span style="
+      left: <%= Math.random()*100 %>%;
+      animation-duration: <%= 3 + Math.random()*6 %>s;
+      animation-delay: <%= Math.random()*3 %>s;
+    ">
+      <%= icons[Math.floor(Math.random()*icons.length)] %>
+    </span>
+  <% } %>
+</div>
+
 <div style="
   max-width: 900px;
   margin: 20px auto;
@@ -7,6 +48,8 @@
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 5;
 ">
 
   <!-- TABS -->
@@ -39,5 +82,3 @@
 </div>
 
 <%- include("partials/footer") %>
-<footer style="text-align:center; margin-top:20px; padding:15px; color:#333;">
-  © 2025 NRO KunZ - Máy chủ Công Nông chuẩn nhất Việt Nam
