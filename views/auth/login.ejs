@@ -1,0 +1,76 @@
+<%- include("../partials/header", { title: "Đăng nhập tài khoản" }) %>
+
+<!-- Snow Effect -->
+<div class="snow">
+  <% for (let i = 0; i < 35; i++) { %>
+    <span style="
+      left:<%= Math.random()*100 %>%;
+      animation-duration:<%= 3 + Math.random()*5 %>s;
+      animation-delay:<%= Math.random()*3 %>s;
+    "></span>
+  <% } %>
+</div>
+
+<div style="
+  max-width:900px;
+  margin:25px auto;
+  background:linear-gradient(to bottom, #42c7dd, #07a1c2);
+  padding:22px;
+  border-radius:10px;
+  position:relative;
+  z-index:3;
+">
+
+  <h2 style="text-align:center; color:#fff;">ĐĂNG NHẬP</h2>
+
+  <div style="
+    background:#ffffffd8;
+    padding:20px;
+    max-width:500px;
+    margin:auto;
+    border-radius:8px;
+  ">
+
+    <form action="/login" method="POST">
+
+      <label><b>Tài khoản:</b></label>
+      <input type="text" name="username" required minlength="3" maxlength="20"
+             style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:12px;">
+
+      <label><b>Mật khẩu:</b></label>
+      <input type="password" name="password" required minlength="5" maxlength="20"
+             style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:12px;">
+
+      <button type="submit" style="
+        width:100%; padding:12px; border:none; background:#1e88e5;
+        color:white; border-radius:6px; font-size:16px; cursor:pointer;
+      ">
+        🔐 Đăng nhập
+      </button>
+
+    </form>
+
+    <% if (msg) { %>
+      <div style="
+        margin-top:15px; padding:10px; background:#fff3cd;
+        border-radius:6px; border:1px solid #ffeeba; color:#856404;
+        text-align:center; font-weight:bold;
+      ">
+        <%= msg %>
+      </div>
+    <% } %>
+
+    <!-- Link phụ -->
+    <div style="text-align:center; margin-top:12px;">
+      <a href="/forgot" style="color:#0f0; font-weight:bold; text-decoration:none;">
+        🔑 Quên mật khẩu?
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+<%- include("../partials/footer") %>
+<footer style="text-align:center; margin-top:20px; padding:15px; color:#333;">
+  © 2025 NRO KunZ - Máy chủ Công Nông chuẩn nhất Việt Nam

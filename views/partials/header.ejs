@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || "NROKunZ" %></title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #e8e8e8;
+      overflow-x: hidden;
+    }
+
+    .header-box {
+      max-width: 900px;
+      margin: 20px auto 0 auto;
+      background: #42c7dd;
+      padding: 25px 10px;
+      border-radius: 10px;
+      text-align: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .header-logo img {
+      width: 260px;
+      max-width: 90%;
+    }
+
+    .download-buttons {
+      margin-top: 10px;
+    }
+    .download-buttons a {
+      padding: 6px 14px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      margin: 4px;
+      display: inline-block;
+      color: #fff;
+      font-weight: bold;
+    }
+    .btn-android { background: #4CAF50; }
+    .btn-pc { background: #4444ff; }
+    .btn-ios { background: #ffcc33; color: black !important; }
+
+    .menu-buttons {
+      margin-top: 12px;
+    }
+    .menu-buttons a, .menu-buttons span {
+      padding: 7px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin: 4px;
+      display: inline-block;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+    }
+
+    .btn-login   { background: #1e88e5; }
+    .btn-register{ background: #43a047; }
+    .btn-forgot  { background: #757575; }
+    .btn-logout  { background: #e53935; }
+  </style>
+</head>
+
+<body>
+
+<div class="header-box">
+
+  <div class="header-logo">
+    <img src="/image/home.png" width="260" />
+  </div>
+
+  <div class="download-buttons">
+    <a class="btn-android" href="#">📥 Android</a>
+    <a class="btn-pc" href="#">📥 PC</a>
+    <a class="btn-ios" href="#">📥 iPhone</a>
+  </div>
+
+  <div class="menu-buttons">
+
+    <% if (!session || !session.user) { %>
+      <!-- CHƯA ĐĂNG NHẬP -->
+      <a class="btn-login" href="/login">🔐 Đăng nhập</a>
+      <a class="btn-register" href="/register">📝 Đăng ký</a>
+      <a class="btn-forgot" href="/forgot">🔑 Quên mật khẩu</a>
+
+    <% } else { %>
+      <!-- ĐÃ ĐĂNG NHẬP -->
+      <span style="background:rgba(0,0,0,0.2);">
+        👋 Xin chào <%= session.user.username %>
+      </span>
+      <a class="btn-logout" href="/logout">🚪 Đăng xuất</a>
+    <% } %>
+
+  </div>
+
+</div>

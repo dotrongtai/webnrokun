@@ -1,37 +1,43 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trang chủ NRO KunZ</title>
+<%- include("partials/header", { title: "Trang chủ NRO KunZ" }) %>
 
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: #0f0;
-      font-family: Arial;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      text-align: center;
-    }
-    a {
-      color: #0f0;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <div class="box">
-    <h1>Chào mừng đến với NRO KunZ</h1>
-    <p>Máy chủ Công Nông KunZ - Đăng ký & chiến ngay!</p>
+<div style="
+  max-width: 900px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+">
 
-    <a href="/register">➡ Đăng ký tài khoản</a>
+  <!-- TABS -->
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    background:#f0faff;
+    border-radius:6px;
+    overflow:hidden;
+  ">
+    <button style="flex:1; padding:10px; border:0; background:#e0f7ff; font-weight:bold;">
+      Diễn đàn
+    </button>
+    <button style="flex:1; padding:10px; border:0; background:white; font-weight:bold;">
+      Góp ý
+    </button>
+    <button style="flex:1; padding:10px; border:0; background:#e0f7ff; font-weight:bold;">
+      Báo lỗi
+    </button>
   </div>
-</body>
-</html>
+
+  <!-- NEWS / ANNOUNCEMENTS -->
+  <div style="background:white; margin-top:10px; padding:15px; border-radius:6px;">
+    <p>🔥 <b>Mở thành viên KunZ</b> <span style="color:red;">NEW!</span></p>
+    <p>💳 Khuyến mãi nạp thẻ</p>
+    <p>⚠ Danh sách lừa đảo</p>
+    <p>📢 Các thông báo hệ thống</p>
+  </div>
+
+</div>
+
+<%- include("partials/footer") %>
+<footer style="text-align:center; margin-top:20px; padding:15px; color:#333;">
+  © 2025 NRO KunZ - Máy chủ Công Nông chuẩn nhất Việt Nam
