@@ -22,7 +22,7 @@ exports.postLogin = async (req, res) => {
 
   try {
     const [rows] = await pool.execute(
-      "SELECT username, password FROM account WHERE username = ?",
+      "SELECT username, password, admin FROM account WHERE username = ?",
       [username]
     );
 
@@ -38,9 +38,12 @@ exports.postLogin = async (req, res) => {
 
     // Đăng nhập thành công
   req.session.user = {
-  username: user.username
+  username: user.username,
+  admin : user.admin
 };
-
+if(user.admin === 1){
+  return res.redirect("/dashboard");
+}
 // Chuyển về trang chủ
 res.redirect("/");
 

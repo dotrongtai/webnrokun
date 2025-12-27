@@ -1,0 +1,154 @@
+<%- include("../partials/header", { title: "Admin Dashboard" }) %>
+
+<style>
+  /* Layout Dashboard */
+  .admin-wrapper {
+    max-width: 1100px;
+    margin: 20px auto;
+    display: flex;
+    gap: 15px;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    padding: 15px;
+    height: fit-content;
+  }
+
+  .sidebar h3 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #d32f2f;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 12px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #333;
+    background: #f7f7f7;
+    transition: 0.2s;
+  }
+
+  .sidebar a:hover {
+    background: #ffe082;
+    transform: translateX(3px);
+  }
+
+  .sidebar a.active {
+    background: #ffcc80;
+    color: #000;
+  }
+
+  /* Content */
+  .content {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    padding: 20px;
+  }
+
+  .content h2 {
+    margin-top: 0;
+    color: #1976d2;
+  }
+
+  /* Card */
+  .card {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    border-left: 5px solid #ff9800;
+  }
+
+  /* Tết effect */
+  .tet {
+    pointer-events: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .tet span {
+    position: absolute;
+    top: -20px;
+    font-size: 20px;
+    opacity: 0.9;
+    animation: tetFall linear infinite;
+  }
+
+  @keyframes tetFall {
+    to {
+      transform: translateY(105vh) rotate(360deg);
+      opacity: 0.4;
+    }
+  }
+</style>
+
+<!-- 🎆 Hiệu ứng Tết: hoa đào + hoa mai rơi -->
+<div class="tet">
+  <% const icons = ["🌸", "🌼", "🧧", "✨"]; %>
+  <% for (let i = 0; i < 40; i++) { %>
+    <span style="
+      left: <%= Math.random()*100 %>%;
+      animation-duration: <%= 3 + Math.random()*6 %>s;
+      animation-delay: <%= Math.random()*3 %>s;
+    ">
+      <%= icons[Math.floor(Math.random()*icons.length)] %>
+    </span>
+  <% } %>
+</div>
+
+<div class="admin-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>⚙ ADMIN MENU</h3>
+
+    <a href="/dashboard" class="active">📊 Tổng quan</a>
+    <a href="/admin/accounts">👤 Quản lý tài khoản</a>
+    <a href="/admin/topup">💰 Quản lý nạp tiền</a>
+    <a href="/admin/giftcode">🎁 Quản lý GiftCode</a>
+    <a href="/admin/server">🖥 Quản lý server</a>
+    <a href="/" style="background:#e53935; color:white;">⬅ Về trang chủ</a>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h2>✅ ADMIN DASHBOARD</h2>
+    <p>Xin chào Admin</b></p>
+    <hr>
+
+    <div class="card">
+      🎉 Chúc mừng năm mới! Bạn có thể quản lý toàn bộ hệ thống tại đây.  
+      <br>Hãy chọn chức năng bên trái để thao tác.
+    </div>
+
+    <div class="card" style="border-left-color:#4caf50;">
+      ✅ Gợi ý:
+      <ul>
+        <li>Kiểm tra danh sách tài khoản</li>
+        <li>Quản lý nạp tiền, số dư</li>
+        <li>Thêm GiftCode mới</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<%- include("../partials/footer") %>

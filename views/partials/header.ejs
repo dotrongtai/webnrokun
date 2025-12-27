@@ -89,13 +89,26 @@
       <a class="btn-register" href="/register">📝 Đăng ký</a>
       <a class="btn-forgot" href="/forgot">🔑 Quên mật khẩu</a>
 
-    <% } else { %>
-      <!-- ĐÃ ĐĂNG NHẬP -->
-      <span style="background:rgba(0,0,0,0.2);">
-        👋 Xin chào <%= session.user.username %>
-      </span>
-      <a class="btn-logout" href="/logout">🚪 Đăng xuất</a>
-    <% } %>
+<% } else { %>
+
+  <!-- Xin chào username (click vào để xem profile) -->
+  <a href="/profile"
+     style="background:#1b7bcc; cursor:pointer;">
+    👋 Xin chào <%= session.user.username %>
+  </a>
+
+  <!-- Đổi mật khẩu -->
+  <a class="btn-forgot" href="/change-password" style="background:#ff9800;">
+    🔐 Đổi mật khẩu
+  </a>
+
+  <!-- Đăng xuất -->
+  <a class="btn-logout" href="/logout" style="background:#e53935;">
+    🚪 Đăng xuất
+  </a>
+
+<% } %>
+
 
   </div>
 

@@ -1,0 +1,37 @@
+<%- include("partials/header", { title: "Trang cá nhân" }) %>
+
+<div style="
+  max-width:600px;
+  margin:20px auto;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 0 8px rgba(0,0,0,0.1);
+">
+
+  <h2 style="text-align:center;">👤 Thông tin tài khoản</h2>
+
+  <p><b>Tên đăng nhập:</b> <%= user.username %></p>
+
+  <p><b>Trạng thái thành viên:</b>
+    <% if (user.active == 1) { %>
+      <span style="color:green; font-weight:bold;">ĐÃ MỞ THÀNH VIÊN ✔</span>
+    <% } else { %>
+      <span style="color:red; font-weight:bold;">CHƯA MỞ ❌</span>
+    <% } %>
+  </p>
+
+  <p><b>Số dư tài khoản (VNĐ):</b>
+    <span style="color:#d32f2f; font-weight:bold;"><%= user.vnd.toLocaleString() %>đ</span>
+  </p>
+
+  <div style="text-align:center; margin-top:20px;">
+    <a href="/change-password"
+       style="background:#2196F3; color:white; padding:10px 14px; border-radius:6px; text-decoration:none;">
+      🔐 Đổi mật khẩu
+    </a>
+  </div>
+
+</div>
+
+<%- include("partials/footer") %>
