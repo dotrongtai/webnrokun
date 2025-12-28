@@ -1,22 +1,13 @@
 const pool = require("../config/db");
 
-// =========================
-// GET REGISTER
-// =========================
 exports.getRegister = (req, res) => {
   res.render("auth/register", { msg: null });
 };
 
-// =========================
-// GET LOGIN
-// =========================
 exports.getLogin = (req, res) => {
   res.render("auth/login", { msg: null });
 };
 
-// =========================
-// POST LOGIN
-// =========================
 exports.postLogin = async (req, res) => {
   const { username, password } = req.body;
 
@@ -36,7 +27,6 @@ exports.postLogin = async (req, res) => {
       return res.render("auth/login", { msg: "Mật khẩu sai!" });
     }
 
-    // Đăng nhập thành công
   req.session.user = {
   username: user.username,
   admin : user.admin
@@ -44,7 +34,7 @@ exports.postLogin = async (req, res) => {
 if(user.admin === 1){
   return res.redirect("/dashboard");
 }
-// Chuyển về trang chủ
+
 res.redirect("/");
 
   } catch (err) {
@@ -53,9 +43,6 @@ res.redirect("/");
   }
 };
 
-// =========================
-// POST REGISTER
-// =========================
 exports.postRegister = async (req, res) => {
   const { username, password, repassword } = req.body;
 
@@ -89,3 +76,4 @@ exports.postRegister = async (req, res) => {
     return res.render("auth/register", { msg: "Lỗi server!" });
   }
 };
+
