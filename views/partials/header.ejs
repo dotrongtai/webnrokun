@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title || "NROKunZ" %></title>
+  <link rel="icon" type="image/png" href="/logovip.png">
 
   <style>
     body {
@@ -96,6 +97,11 @@
      style="background:#1b7bcc; cursor:pointer;">
     👋 Xin chào <%= session.user.username %>
   </a>
+<% if (session.user && session.user.admin==1) { %>
+  <a href="/dashboard" style="background:#1b7bcc; cursor:pointer;">
+    👨‍💼 Trang Admin
+  </a>
+<% } %>
 
   <!-- Đổi mật khẩu -->
   <a class="btn-forgot" href="/change-password" style="background:#ff9800;">

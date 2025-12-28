@@ -1,27 +1,29 @@
 const pool = require("../config/db");
 
-// ✅ GET /admin/giftcode
 exports.index = async (req, res) => {
   try {
     const [giftcodes] = await pool.execute("SELECT * FROM giftcode ORDER BY id DESC");
+    console.log("✅ DEBUG giftcodes[0]:", giftcodes[0]);
 
-    // ✅ gom tất cả itemId + optionId để query 1 lần
     const allItemIds = new Set();
     const allOptionIds = new Set();
 
     giftcodes.forEach(gc => {
-      try {
-        const items = JSON.parse(gc.listItem || "[]");
-        items.forEach(it => allItemIds.add(Number(it.id)));
+  try {
+    console.log("✅ DEBUG raw listItem (id=" + gc.id + "):", gc.listItem);
 
-        const opts = JSON.parse(gc.itemoption || "[]");
-        opts.forEach(op => allOptionIds.add(Number(op.id)));
-      } catch (e) {
-        console.log("JSON parse error giftcode id:", gc.id);
-      }
-    });
+    const items = JSON.parse(gc.listItem || "[]");
+    console.log("✅ DEBUG parsed items:", items);
 
-    // ✅ query lấy tên item
+    items.forEach(it => allItemIds.add(Number(it.id)));
+
+    const opts = JSON.parse(gc.itemoption || "[]");
+    opts.forEach(op => allOptionIds.add(Number(op.id)));
+  } catch (e) {
+    console.log("❌ JSON parse error giftcode id:", gc.id, e.message);
+  }
+});
+
     const itemMap = {};
     if (allItemIds.size > 0) {
       const ids = [...allItemIds];
@@ -32,7 +34,6 @@ exports.index = async (req, res) => {
       rows.forEach(r => (itemMap[r.id] = r.name));
     }
 
-    // ✅ query lấy tên option
     const optionMap = {};
     if (allOptionIds.size > 0) {
       const ids = [...allOptionIds];
@@ -43,12 +44,15 @@ exports.index = async (req, res) => {
       rows.forEach(r => (optionMap[r.id] = r.name));
     }
 
-    // ✅ build rewardText
     const result = giftcodes.map(gc => {
       let rewardText = "";
 
       try {
+            console.log("✅ DEBUG build rewardText => id:", gc.id, "raw listItem:", gc.listItem);
+
         const items = JSON.parse(gc.listItem || "[]");
+            console.log("✅ DEBUG build items parsed:", items);
+
         const opts = JSON.parse(gc.itemoption || "[]");
 
         if (items.length > 0) {
@@ -83,8 +87,6 @@ exports.index = async (req, res) => {
   }
 };
 
-
-// ✅ GET /admin/giftcode/create
 exports.create = async (req, res) => {
   try {
     res.render("admin/giftcode/create", {
@@ -96,14 +98,38 @@ exports.create = async (req, res) => {
   }
 };
 
-
-// ✅ POST /admin/giftcode/create
 exports.store = async (req, res) => {
   try {
-    // tạm thời test
-    res.send("OK - store giftcode");
+    console.log("BODY POST:", req.body);
+
+    const { code, limit, expired, items, options } = req.body;
+
+    // ✅ validate tối thiểu
+    if (!code || !limit || !expired) {
+      return res.send("Thiếu dữ liệu: code/limit/expired");
+    }
+
+    const listItem = items && items !== "" ? items : "[]";
+    const itemoption = options && options !== "" ? options : "[]";
+
+    const [result] = await pool.execute(`
+      INSERT INTO giftcode
+        (code, type, \`delete\`, \`limit\`, listUser, listItem, bagCount, itemoption, create_date, expired)
+      VALUES
+        (?, 1, 1, ?, '[]', ?, 1, ?, NOW(), ?)
+    `, [code, Number(limit), listItem, itemoption, expired]);
+
+    console.log("INSERT RESULT:", result);
+
+    // ✅ nếu insert thành công sẽ có insertId
+    if (result.affectedRows > 0) {
+      return res.redirect("/admin/giftcode");
+    } else {
+      return res.send("Insert thất bại - affectedRows=0");
+    }
+
   } catch (err) {
-    console.error(err);
-    res.send("Lỗi server");
+    console.error("STORE GIFTCODE ERROR:", err);
+    return res.send("Lỗi khi tạo giftcode: " + err.message);
   }
 };
