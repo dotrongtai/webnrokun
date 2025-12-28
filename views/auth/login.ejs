@@ -21,29 +21,69 @@
   z-index:3;
 ">
 
-  <h2 style="text-align:center; color:#fff;">ĐĂNG NHẬP</h2>
+  <h2 style="text-align:center; color:#fff; margin-bottom:18px;">ĐĂNG NHẬP</h2>
 
+  <!-- FORM BOX -->
   <div style="
     background:#ffffffd8;
-    padding:20px;
-    max-width:500px;
+    padding:28px 30px; /* ✅ tăng padding để không sát */
+    max-width:520px;
     margin:auto;
-    border-radius:8px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.12);
   ">
 
     <form action="/login" method="POST">
 
-      <label><b>Tài khoản:</b></label>
-      <input type="text" name="username" required minlength="1" maxlength="20"
-             style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:12px;">
+      <label style="display:block; margin-bottom:6px; font-weight:bold;">
+        Tài khoản:
+      </label>
 
-      <label><b>Mật khẩu:</b></label>
+      <input type="text" name="username" required minlength="1" maxlength="20"
+        style="
+          width:100%;
+          max-width:420px;
+          margin:0 auto 15px auto; /* ✅ nằm giữa và có khoảng cách */
+          display:block;
+          padding:12px;
+          border-radius:8px;
+          border:1px solid #ccc;
+          font-size:15px;
+          outline:none;
+        "
+      >
+
+      <label style="display:block; margin-bottom:6px; font-weight:bold;">
+        Mật khẩu:
+      </label>
+
       <input type="password" name="password" required minlength="1" maxlength="20"
-             style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:12px;">
+        style="
+          width:100%;
+          max-width:420px;
+          margin:0 auto 18px auto;
+          display:block;
+          padding:12px;
+          border-radius:8px;
+          border:1px solid #ccc;
+          font-size:15px;
+          outline:none;
+        "
+      >
 
       <button type="submit" style="
-        width:100%; padding:12px; border:none; background:#1e88e5;
-        color:white; border-radius:6px; font-size:16px; cursor:pointer;
+        width:100%;
+        max-width:420px;
+        margin:0 auto;
+        display:block;
+        padding:12px;
+        border:none;
+        background:#1e88e5;
+        color:white;
+        border-radius:8px;
+        font-size:16px;
+        cursor:pointer;
+        font-weight:bold;
       ">
         🔐 Đăng nhập
       </button>
@@ -52,16 +92,25 @@
 
     <% if (msg) { %>
       <div style="
-        margin-top:15px; padding:10px; background:#fff3cd;
-        border-radius:6px; border:1px solid #ffeeba; color:#856404;
-        text-align:center; font-weight:bold;
+        margin-top:18px;
+        padding:12px;
+        background:#fff3cd;
+        border-radius:8px;
+        border:1px solid #ffeeba;
+        color:#856404;
+        text-align:center;
+        font-weight:bold;
       ">
         <%= msg %>
       </div>
     <% } %>
 
-    <div style="text-align:center; margin-top:12px;">
-      <a href="/forgot" style="color:#0f0; font-weight:bold; text-decoration:none;">
+    <div style="text-align:center; margin-top:18px;">
+      <a href="/forgot" style="
+        color:#1e88e5; 
+        font-weight:bold; 
+        text-decoration:none;
+      ">
         🔑 Quên mật khẩu?
       </a>
     </div>
@@ -71,4 +120,3 @@
 </div>
 
 <%- include("../partials/footer") %>
-

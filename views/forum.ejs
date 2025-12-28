@@ -1,4 +1,4 @@
-<%- include("partials/header", { title: "Trang chủ NRO KunZ" }) %>
+<%- include("partials/header", { title: "Diễn đàn NRO KunZ" }) %>
 
 <style>
   body {
@@ -8,7 +8,7 @@
     overflow-x: hidden;
   }
 
-  /* ❄ TUYẾT */
+
   .snowflake {
     position: fixed;
     top: -10px;
@@ -27,7 +27,7 @@
     }
   }
 
-  /* 🌸🌼🧧 HIỆU ỨNG TẾT */
+
   .tet-item {
     position: fixed;
     top: -30px;
@@ -45,7 +45,6 @@
     }
   }
 
-  /* ✨ SPARK */
   .spark {
     position: fixed;
     width: 6px;
@@ -64,7 +63,42 @@
     100% { transform: scale(0.5); opacity: 0.2; }
   }
 
-  /* 🎉 BANNER */
+
+  .lantern {
+    position: fixed;
+    top: 120px;
+    width: 90px;
+    z-index: 5;
+    pointer-events: none;
+    animation: swing 3s ease-in-out infinite;
+  }
+
+  .lantern.left { left: 15px; }
+  .lantern.right { right: 15px; }
+
+  @keyframes swing {
+    0%,100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+
+
+  .firework {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 0 0 12px gold;
+    animation: explode 1.5s infinite;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  @keyframes explode {
+    0% { transform: scale(0.2); opacity: 1; }
+    100% { transform: scale(3.5); opacity: 0; }
+  }
+
   .tet-banner {
     position: fixed;
     top: 0;
@@ -86,10 +120,9 @@
     100% { filter: brightness(1); }
   }
 
-  /* MAIN BOX - giống forum */
-  .home-container {
+  .forum-container {
     max-width: 900px;
-    margin: 60px auto 20px;
+    margin: 60px auto 20px; 
     background: #ffcc80;
     padding: 20px;
     border-radius: 8px;
@@ -98,30 +131,52 @@
     z-index: 10;
   }
 
+  h2.section-title {
+    color: #d84315;
+    border-bottom: 2px solid #e65100;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+  }
+
   .block {
     background: #ffe0b2;
     padding: 15px;
     border-radius: 8px;
-    margin-top: 15px;
+    margin-bottom: 20px;
     line-height: 1.5;
   }
 
-  /* Mobile */
+  .center-img {
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .center-img img {
+    width: 120px;
+    margin: 5px;
+    border-radius: 4px;
+  }
+
+
   @media(max-width: 760px) {
+    .lantern { display: none; }
     .tet-banner { font-size: 13px; }
   }
 </style>
 
-<!-- 🎉 Banner -->
+
 <div class="tet-banner">
   🧧 CHÚC MỪNG NĂM MỚI 2025 - NRO KUNZ 🎉 | Săn quà Tết - Nhận lì xì - Đăng nhập nhận giftcode 🧧
 </div>
+
+<div class="firework" style="top:120px; left:80px;"></div>
+<div class="firework" style="top:160px; right:100px;"></div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const tetIcons = ["🌸","🌼","🧧","✨","🎇","🧨"];
 
-    // 🌸🌼🧧 rơi
+   
     for (let i = 0; i < 55; i++) {
       let item = document.createElement("div");
       item.className = "tet-item";
@@ -133,7 +188,7 @@
       document.body.appendChild(item);
     }
 
-    // ❄ tuyết
+   
     for (let i = 0; i < 30; i++) {
       let snow = document.createElement("div");
       snow.className = "snowflake";
@@ -144,8 +199,6 @@
       snow.style.animationDelay = Math.random() * 3 + "s";
       document.body.appendChild(snow);
     }
-
-    // ✨ spark
     for (let i = 0; i < 25; i++) {
       let s = document.createElement("div");
       s.className = "spark";
@@ -157,53 +210,78 @@
   });
 </script>
 
-<!-- MAIN CONTENT -->
-<div class="home-container">
 
-  <!-- TABS (giống forum) -->
-  <div style="
-    display:flex;
-    justify-content:space-between;
-    background:#f0faff;
-    border-radius:6px;
-    overflow:hidden;
-    margin-bottom:15px;
+<div class="forum-container">
+
+<div style="
+  display:flex;
+  justify-content:space-between;
+  background:#f0faff;
+  border-radius:6px;
+  overflow:hidden;
+  margin-bottom:15px;
+">
+
+
+  <a href="/forum" style="
+    flex:1;
+    padding:10px;
+    background:#e0f7ff;
+    font-weight:bold;
+    text-align:center;
+    text-decoration:none;
+    color:#000;
+    display:block;
   ">
+    Diễn đàn
+  </a>
 
-    <a href="/forum" style="
-      flex:1;
-      padding:10px;
-      background:#e0f7ff;
-      font-weight:bold;
-      text-align:center;
-      text-decoration:none;
-      color:#000;
-      display:block;
-    ">
-      Diễn đàn
-    </a>
 
-    <a href="/" style="
-      flex:1;
-      padding:10px;
-      background:white;
-      font-weight:bold;
-      text-align:center;
-      text-decoration:none;
-      color:#000;
-      display:block;
-    ">
-      Góp ý
-    </a>
+  <a href="/" style="
+    flex:1;
+    padding:10px;
+    background:white;
+    font-weight:bold;
+    text-align:center;
+    text-decoration:none;
+    color:#000;
+    display:block;
+  ">
+    Góp ý
+  </a>
 
+</div>
+
+  <h2 class="section-title">Giới Thiệu</h2>
+
+  <div class="block">
+    Ngọc Rồng Online là trò chơi trực tuyến xoay quanh bộ truyện tranh 7 viên ngọc rồng.  
+    Người chơi sẽ hóa thân thành một trong những nhân vật để luyện tập, tăng cường sức mạnh và kỹ năng.
+    <br><br>
+    Đặc điểm nổi bật:
+    <ul>
+      <li>Đồ họa bắt mắt, nhiều hoạt động</li>
+      <li>Hệ thống nhân vật phong phú</li>
+      <li>Trang bị, kỹ năng đa dạng</li>
+      <li>Hoạt động Boss – săn đồ mỗi ngày</li>
+    </ul>
+
+    <div class="center-img">
+      <img src="/image/a1.gif">
+      <img src="/image/a2.gif">
+      <img src="/image/a3.gif">
+      <img src="/image/a4.gif">
+    </div>
   </div>
 
-  <!-- NEWS -->
+  <h2 class="section-title">Hướng Dẫn Tân Thủ</h2>
+
   <div class="block">
-    <p>🔥 <b>Mở thành viên KunZ</b> <span style="color:red;">NEW!</span></p>
-    <p>💳 Khuyến mãi nạp thẻ</p>
-    <p>⚠ Danh sách lừa đảo</p>
-    <p>📢 Các thông báo hệ thống</p>
+    1. Đăng ký tài khoản<br>
+    2. Chọn hành tinh<br>
+    3. Làm nhiệm vụ đầu game<br>
+    4. Mua trang bị và tăng sức mạnh<br>
+    5. Tham gia hoạt động hằng ngày<br>
   </div>
 
 </div>

@@ -113,3 +113,12 @@
   </div>
 
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const logo = document.querySelector(".header-logo img");
+    logo.style.cursor = "pointer";
+    logo.addEventListener("click", function() {
+      window.location.href = "/";
+    });
+  });
+</script>

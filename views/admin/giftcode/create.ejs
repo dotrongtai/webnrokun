@@ -1,0 +1,492 @@
+<%- include("../../partials/header", { title: "Tạo GiftCode" }) %>
+
+<style>
+  body {
+    margin: 0;
+    background: linear-gradient(#86c5f8, #fff);
+    font-family: Arial;
+    overflow-x: hidden;
+  }
+
+  /* ======== ❄ TUYẾT ======== */
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 18px;
+    opacity: 0.9;
+    pointer-events: none;
+    animation: fallSnow linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes fallSnow {
+    to {
+      transform: translateY(110vh);
+      opacity: 0.3;
+    }
+  }
+
+  /* ======== 🌸🌼🧧 HIỆU ỨNG TẾT RƠI ======== */
+  .tet-item {
+    position: fixed;
+    top: -30px;
+    font-size: 24px;
+    pointer-events: none;
+    animation: fallTet linear infinite;
+    opacity: 0.9;
+    z-index: 2;
+  }
+
+  @keyframes fallTet {
+    to {
+      transform: translateY(120vh) rotate(360deg);
+      opacity: 0.35;
+    }
+  }
+
+  /* ======== ✨ SPARK ======== */
+  .spark {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: gold;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: sparkle 2s infinite;
+    z-index: 2;
+  }
+
+  @keyframes sparkle {
+    0% { transform: scale(0.5); opacity: 0.2; }
+    50% { transform: scale(1.4); opacity: 1; }
+    100% { transform: scale(0.5); opacity: 0.2; }
+  }
+
+  /* ======== BANNER ======== */
+  .tet-banner {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 8px 0;
+    background: rgba(220, 0, 0, 0.85);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    z-index: 999;
+    font-size: 15px;
+    animation: glow 1.5s infinite;
+  }
+
+  @keyframes glow {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+    100% { filter: brightness(1); }
+  }
+
+  /* Layout giống forum */
+  .admin-wrapper {
+    max-width: 1100px;
+    margin: 70px auto 20px;
+    display: flex;
+    gap: 15px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background: #ffcc80;
+    border-radius: 10px;
+    border: 2px solid #f57c00;
+    padding: 15px;
+    height: fit-content;
+  }
+
+  .sidebar h3 {
+    text-align: center;
+    margin: 0 0 15px;
+    color: #d84315;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 12px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+    background: #ffe0b2;
+    border: 1px solid #f57c00;
+    transition: 0.2s;
+  }
+
+  .sidebar a:hover {
+    background: #ffd180;
+    transform: translateX(3px);
+  }
+
+  .sidebar a.active {
+    background: #ff9800;
+    color: white;
+  }
+
+  /* Content */
+  .content {
+    flex: 1;
+    background: #ffcc80;
+    border-radius: 10px;
+    border: 2px solid #f57c00;
+    padding: 20px;
+  }
+
+  .content h2 {
+    margin-top: 0;
+    color: #d84315;
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-top: 6px;
+    box-sizing: border-box;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* Dropdown results */
+  .result-box {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    max-height: 200px;
+    overflow: auto;
+    display: none;
+    margin-top: 6px;
+  }
+  .result-box div {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+  .result-box div:hover {
+    background: #fff3e0;
+  }
+
+  ul {
+    padding-left: 18px;
+  }
+
+  li {
+    margin-bottom: 6px;
+  }
+</style>
+
+<!-- Banner -->
+<div class="tet-banner">
+  🧧 ADMIN - TẠO GIFTCODE 🎉 | Tạo GiftCode nhanh - Search item theo tên - Không giới hạn ID 🧧
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tetIcons = ["🌸","🌼","🧧","✨","🎇","🧨"];
+
+    for (let i = 0; i < 40; i++) {
+      let item = document.createElement("div");
+      item.className = "tet-item";
+      item.textContent = tetIcons[Math.floor(Math.random() * tetIcons.length)];
+      item.style.left = Math.random() * 100 + "%";
+      item.style.animationDuration = 4 + Math.random() * 7 + "s";
+      item.style.fontSize = (18 + Math.random() * 25) + "px";
+      item.style.animationDelay = Math.random() * 4 + "s";
+      document.body.appendChild(item);
+    }
+
+    for (let i = 0; i < 25; i++) {
+      let snow = document.createElement("div");
+      snow.className = "snowflake";
+      snow.textContent = "❄";
+      snow.style.left = Math.random() * 100 + "%";
+      snow.style.animationDuration = 4 + Math.random() * 6 + "s";
+      snow.style.fontSize = (12 + Math.random() * 18) + "px";
+      snow.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(snow);
+    }
+
+    for (let i = 0; i < 25; i++) {
+      let s = document.createElement("div");
+      s.className = "spark";
+      s.style.top = Math.random() * 100 + "vh";
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.animationDelay = Math.random() * 2 + "s";
+      document.body.appendChild(s);
+    }
+  });
+</script>
+
+<div class="admin-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>⚙ ADMIN MENU</h3>
+    <a href="/dashboard">📊 Tổng quan</a>
+    <a href="/admin/giftcode" class="active">🎁 Quản lý GiftCode</a>
+    <a href="/" style="background:#e53935; color:white; border:none;">⬅ Về trang chủ</a>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h2>➕ Tạo GiftCode mới</h2>
+
+    <% if (msg) { %>
+      <p style="color:red; font-weight:bold;"><%= msg %></p>
+    <% } %>
+
+    <form method="POST" action="/admin/giftcode/create" onsubmit="beforeSubmit()">
+
+      <label>Mã GiftCode:</label>
+      <input required name="code" placeholder="VD: TET2025VIP">
+
+      <label>Giới hạn lượt nhập (limit):</label>
+      <input required type="number" name="limit" min="1" value="1">
+
+      <label>Thời gian hết hạn:</label>
+      <input required type="datetime-local" name="expired">
+
+      <hr style="border:1px solid #f57c00; margin:15px 0">
+
+      <h3>🎁 Danh sách Item</h3>
+
+      <input id="itemSearch" placeholder="🔍 Gõ tên hoặc ID vật phẩm...">
+
+      <div id="itemResults" class="result-box"></div>
+
+      <input type="hidden" id="selectedItemId">
+      <input type="text" id="selectedItemName" readonly placeholder="✅ Item được chọn sẽ hiện ở đây"
+             style="background:#f7f7f7;">
+
+      <label>Số lượng:</label>
+      <input id="qtyInput" type="number" min="1" value="1">
+
+      <button type="button" onclick="addItem()"
+              style="background:#43a047; color:white; padding:10px; border:none; border-radius:6px; margin-top:10px;">
+        ➕ Thêm Item
+      </button>
+
+      <ul id="itemList" style="margin-top:10px;"></ul>
+
+      <hr style="border:1px solid #f57c00; margin:15px 0">
+
+      <h3>⚙ Item Options</h3>
+
+      <input id="optionSearch" placeholder="🔍 Gõ tên hoặc ID option...">
+
+      <div id="optionResults" class="result-box"></div>
+
+      <input type="hidden" id="selectedOptionId">
+      <input type="text" id="selectedOptionName" readonly placeholder="✅ Option được chọn sẽ hiện ở đây"
+             style="background:#f7f7f7;">
+
+      <label>Chỉ số (param):</label>
+      <input id="paramInput" type="number" min="0" max="1000" value="0">
+
+      <button type="button" onclick="addOption()"
+              style="background:#ff9800; color:white; padding:10px; border:none; border-radius:6px; margin-top:10px;">
+        ➕ Thêm Option
+      </button>
+
+      <ul id="optionList" style="margin-top:10px;"></ul>
+
+      <!-- Hidden JSON -->
+      <input type="hidden" name="items" id="itemsJson">
+      <input type="hidden" name="options" id="optionsJson">
+
+      <hr style="border:1px solid #f57c00; margin:15px 0">
+
+      <button type="submit"
+              style="background:#1976d2; color:white; padding:12px; border:none; border-radius:6px; width:100%; font-weight:bold;">
+        ✅ Tạo GiftCode
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  let itemsArr = [];
+  let optionsArr = [];
+
+  // =============================
+  // 🔍 SEARCH ITEM AJAX
+  // =============================
+  const itemSearch = document.getElementById("itemSearch");
+  const itemResults = document.getElementById("itemResults");
+  const selectedItemId = document.getElementById("selectedItemId");
+  const selectedItemName = document.getElementById("selectedItemName");
+
+  let itemTimer = null;
+
+  itemSearch.addEventListener("input", () => {
+    clearTimeout(itemTimer);
+    const q = itemSearch.value.trim();
+    if (!q) {
+      itemResults.style.display = "none";
+      return;
+    }
+
+    itemTimer = setTimeout(async () => {
+      const res = await fetch(`/admin/api/items?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+
+      itemResults.innerHTML = "";
+      itemResults.style.display = "block";
+
+      if (data.length === 0) {
+        itemResults.innerHTML = `<div style="padding:10px; color:gray;">Không tìm thấy item</div>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const div = document.createElement("div");
+        div.innerHTML = `<b>${item.id}</b> - ${item.name}`;
+        div.onclick = () => {
+          selectedItemId.value = item.id;
+          selectedItemName.value = `${item.id} - ${item.name}`;
+          itemResults.style.display = "none";
+        };
+        itemResults.appendChild(div);
+      });
+    }, 250);
+  });
+
+  // =============================
+  // ➕ ADD ITEM
+  // =============================
+  function addItem() {
+    const id = parseInt(selectedItemId.value);
+    const qty = parseInt(document.getElementById("qtyInput").value);
+
+    if (!id) return alert("⚠ Vui lòng chọn item trước!");
+
+    itemsArr.push({ id, quantity: qty });
+    renderItems();
+  }
+
+  function renderItems() {
+    const ul = document.getElementById("itemList");
+    ul.innerHTML = "";
+    itemsArr.forEach((it, index) => {
+      ul.innerHTML += `
+        <li>
+          ✅ Item ID: <b>${it.id}</b> | SL: <b>${it.quantity}</b>
+          <button type="button" onclick="removeItem(${index})"
+            style="background:red; color:white; border:none; border-radius:4px; padding:3px 7px; margin-left:8px;">
+            ❌
+          </button>
+        </li>
+      `;
+    });
+  }
+
+  function removeItem(i) {
+    itemsArr.splice(i, 1);
+    renderItems();
+  }
+
+  // =============================
+  // 🔍 SEARCH OPTION AJAX
+  // =============================
+  const optionSearch = document.getElementById("optionSearch");
+  const optionResults = document.getElementById("optionResults");
+  const selectedOptionId = document.getElementById("selectedOptionId");
+  const selectedOptionName = document.getElementById("selectedOptionName");
+
+  let optionTimer = null;
+
+  optionSearch.addEventListener("input", () => {
+    clearTimeout(optionTimer);
+    const q = optionSearch.value.trim();
+    if (!q) {
+      optionResults.style.display = "none";
+      return;
+    }
+
+    optionTimer = setTimeout(async () => {
+      const res = await fetch(`/admin/api/options?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+
+      optionResults.innerHTML = "";
+      optionResults.style.display = "block";
+
+      if (data.length === 0) {
+        optionResults.innerHTML = `<div style="padding:10px; color:gray;">Không tìm thấy option</div>`;
+        return;
+      }
+
+      data.forEach(op => {
+        const div = document.createElement("div");
+        div.innerHTML = `<b>${op.id}</b> - ${op.name}`;
+        div.onclick = () => {
+          selectedOptionId.value = op.id;
+          selectedOptionName.value = `${op.id} - ${op.name}`;
+          optionResults.style.display = "none";
+        };
+        optionResults.appendChild(div);
+      });
+    }, 250);
+  });
+
+  // =============================
+  // ➕ ADD OPTION
+  // =============================
+  function addOption() {
+    const id = parseInt(selectedOptionId.value);
+    const param = parseInt(document.getElementById("paramInput").value);
+
+    if (!id) return alert("⚠ Vui lòng chọn option trước!");
+
+    optionsArr.push({ id, param });
+    renderOptions();
+  }
+
+  function renderOptions() {
+    const ul = document.getElementById("optionList");
+    ul.innerHTML = "";
+    optionsArr.forEach((op, index) => {
+      ul.innerHTML += `
+        <li>
+          ✅ Option ID: <b>${op.id}</b> | Param: <b>${op.param}</b>
+          <button type="button" onclick="removeOption(${index})"
+            style="background:red; color:white; border:none; border-radius:4px; padding:3px 7px; margin-left:8px;">
+            ❌
+          </button>
+        </li>
+      `;
+    });
+  }
+
+  function removeOption(i) {
+    optionsArr.splice(i, 1);
+    renderOptions();
+  }
+
+  function beforeSubmit() {
+    document.getElementById("itemsJson").value = JSON.stringify(itemsArr);
+    document.getElementById("optionsJson").value = JSON.stringify(optionsArr);
+  }
+</script>
+
+<%- include("../../partials/footer") %>

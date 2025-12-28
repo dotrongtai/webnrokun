@@ -1,0 +1,294 @@
+<%- include("../../partials/header", { title: "Quản lý GiftCode" }) %>
+
+<style>
+  body {
+    margin: 0;
+    background: linear-gradient(#86c5f8, #fff);
+    font-family: Arial;
+    overflow-x: hidden;
+  }
+
+  /* ======== ❄ TUYẾT ======== */
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 18px;
+    opacity: 0.9;
+    pointer-events: none;
+    animation: fallSnow linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes fallSnow {
+    to {
+      transform: translateY(110vh);
+      opacity: 0.3;
+    }
+  }
+
+  /* ======== 🌸🌼🧧 HIỆU ỨNG TẾT RƠI ======== */
+  .tet-item {
+    position: fixed;
+    top: -30px;
+    font-size: 24px;
+    pointer-events: none;
+    animation: fallTet linear infinite;
+    opacity: 0.9;
+    z-index: 2;
+  }
+
+  @keyframes fallTet {
+    to {
+      transform: translateY(120vh) rotate(360deg);
+      opacity: 0.35;
+    }
+  }
+
+  /* ======== ✨ SPARK LẤP LÁNH ======== */
+  .spark {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: gold;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: sparkle 2s infinite;
+    z-index: 2;
+  }
+
+  @keyframes sparkle {
+    0% { transform: scale(0.5); opacity: 0.2; }
+    50% { transform: scale(1.4); opacity: 1; }
+    100% { transform: scale(0.5); opacity: 0.2; }
+  }
+
+  /* ======== 🎉 BANNER ======== */
+  .tet-banner {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 8px 0;
+    background: rgba(220, 0, 0, 0.85);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    z-index: 999;
+    font-size: 15px;
+    animation: glow 1.5s infinite;
+  }
+
+  @keyframes glow {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+    100% { filter: brightness(1); }
+  }
+
+  /* ✅ WRAPPER giống forum */
+  .admin-wrapper {
+    max-width: 1100px;
+    margin: 70px auto 20px;
+    display: flex;
+    gap: 15px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background: #ffcc80;
+    border-radius: 10px;
+    border: 2px solid #f57c00;
+    padding: 15px;
+    height: fit-content;
+  }
+
+  .sidebar h3 {
+    text-align: center;
+    margin: 0 0 15px;
+    color: #d84315;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 12px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+    background: #ffe0b2;
+    border: 1px solid #f57c00;
+    transition: 0.2s;
+  }
+
+  .sidebar a:hover {
+    background: #ffd180;
+    transform: translateX(3px);
+  }
+
+  .sidebar a.active {
+    background: #ff9800;
+    color: white;
+  }
+
+  /* Content */
+  .content {
+    flex: 1;
+    background: #ffcc80;
+    border-radius: 10px;
+    border: 2px solid #f57c00;
+    padding: 20px;
+  }
+
+  .content h2 {
+    margin-top: 0;
+    color: #d84315;
+  }
+
+  /* Button */
+  .btn-create {
+    display: inline-block;
+    background: #43a047;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .btn-create:hover {
+    filter: brightness(1.1);
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th {
+    background: #ffe0b2;
+    padding: 10px;
+    border-bottom: 2px solid #f57c00;
+    color: #d84315;
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  tr:hover td {
+    background: #fff3e0;
+  }
+
+</style>
+
+<!-- 🎉 Banner -->
+<div class="tet-banner">
+  🧧 CHÚC MỪNG NĂM MỚI 2025 - ADMIN KHU VỰC 🎉 | Quản lý GiftCode - Tặng lì xì - Sự kiện Tết 🧧
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tetIcons = ["🌸","🌼","🧧","✨","🎇","🧨"];
+
+    for (let i = 0; i < 55; i++) {
+      let item = document.createElement("div");
+      item.className = "tet-item";
+      item.textContent = tetIcons[Math.floor(Math.random() * tetIcons.length)];
+      item.style.left = Math.random() * 100 + "%";
+      item.style.animationDuration = 4 + Math.random() * 7 + "s";
+      item.style.fontSize = (18 + Math.random() * 25) + "px";
+      item.style.animationDelay = Math.random() * 4 + "s";
+      document.body.appendChild(item);
+    }
+
+    for (let i = 0; i < 30; i++) {
+      let snow = document.createElement("div");
+      snow.className = "snowflake";
+      snow.textContent = "❄";
+      snow.style.left = Math.random() * 100 + "%";
+      snow.style.animationDuration = 4 + Math.random() * 6 + "s";
+      snow.style.fontSize = (12 + Math.random() * 18) + "px";
+      snow.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(snow);
+    }
+
+    for (let i = 0; i < 25; i++) {
+      let s = document.createElement("div");
+      s.className = "spark";
+      s.style.top = Math.random() * 100 + "vh";
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.animationDelay = Math.random() * 2 + "s";
+      document.body.appendChild(s);
+    }
+  });
+</script>
+
+<div class="admin-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>⚙ ADMIN MENU</h3>
+    <a href="/dashboard">📊 Tổng quan</a>
+    <a href="/admin/accounts">👤 Quản lý tài khoản</a>
+    <a href="/admin/topup">💰 Quản lý nạp tiền</a>
+    <a href="/admin/giftcode" class="active">🎁 Quản lý GiftCode</a>
+    <a href="/admin/server">🖥 Quản lý server</a>
+    <a href="/" style="background:#e53935; color:white; border:none;">⬅ Về trang chủ</a>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h2>🎁 Quản lý GiftCode</h2>
+
+    <a href="/admin/giftcode/create" class="btn-create">
+      ➕ Tạo GiftCode
+    </a>
+<hr style="border:1px solid #f57c00; margin:15px 0;">
+
+<div style="overflow-x:auto; background:white; border-radius:10px;">
+  <table style="width:100%; border-collapse:collapse; table-layout:fixed; min-width:950px;">
+    <tr>
+      <th style="width:60px;">ID</th>
+      <th style="width:120px;">Code</th>
+      <th style="width:80px;">Limit</th>
+      <th style="width:170px;">Expired</th>
+      <th style="width:280px;">🎁 Phần thưởng</th>
+      <th style="width:220px;">Users</th>
+    </tr>
+
+    <% giftcodes.forEach(gc => { %>
+    <tr>
+      <td><%= gc.id %></td>
+      <td><b><%= gc.code %></b></td>
+      <td><%= gc.limit %></td>
+      <td style="word-break:break-word;"><%= gc.expired %></td>
+
+      <!-- ✅ Phần thưởng -->
+      <td style="font-size:13px; line-height:1.4;">
+        <%- gc.rewardText %>
+      </td>
+
+      <!-- ✅ Users -->
+      <td style="word-break:break-word; font-size:13px;">
+        <%= gc.listUser %>
+      </td>
+    </tr>
+    <% }) %>
+  </table>
+</div>
+
+  </div>
+
+</div>
+
+<%- include("../../partials/footer") %>

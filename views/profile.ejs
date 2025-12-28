@@ -1,35 +1,213 @@
 <%- include("partials/header", { title: "Trang cá nhân" }) %>
 
-<div style="
-  max-width:600px;
-  margin:20px auto;
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  box-shadow:0 0 8px rgba(0,0,0,0.1);
-">
+<style>
+  body {
+    margin: 0;
+    background: linear-gradient(#86c5f8, #fff);
+    font-family: Arial;
+    overflow-x: hidden;
+  }
 
-  <h2 style="text-align:center;">👤 Thông tin tài khoản</h2>
+  /* ❄ TUYẾT */
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 18px;
+    opacity: 0.9;
+    pointer-events: none;
+    animation: fallSnow linear infinite;
+    z-index: 1;
+  }
+  @keyframes fallSnow {
+    to { transform: translateY(110vh); opacity: 0.3; }
+  }
 
-  <p><b>Tên đăng nhập:</b> <%= user.username %></p>
+  /* 🌸🌼🧧 TẾT RƠI */
+  .tet-item {
+    position: fixed;
+    top: -30px;
+    font-size: 24px;
+    pointer-events: none;
+    animation: fallTet linear infinite;
+    opacity: 0.9;
+    z-index: 2;
+  }
+  @keyframes fallTet {
+    to { transform: translateY(120vh) rotate(360deg); opacity: 0.35; }
+  }
 
-  <p><b>Trạng thái thành viên:</b>
-    <% if (user.active == 1) { %>
-      <span style="color:green; font-weight:bold;">ĐÃ MỞ THÀNH VIÊN ✔</span>
-    <% } else { %>
-      <span style="color:red; font-weight:bold;">CHƯA MỞ ❌</span>
-    <% } %>
-  </p>
+  /* ✨ SPARK */
+  .spark {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: gold;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: sparkle 2s infinite;
+    z-index: 2;
+  }
+  @keyframes sparkle {
+    0% { transform: scale(0.5); opacity: 0.2; }
+    50% { transform: scale(1.4); opacity: 1; }
+    100% { transform: scale(0.5); opacity: 0.2; }
+  }
 
-  <p><b>Số dư tài khoản (VNĐ):</b>
-    <span style="color:#d32f2f; font-weight:bold;"><%= user.vnd.toLocaleString() %>đ</span>
-  </p>
+  /* 🎉 BANNER */
+  .tet-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 8px 0;
+    background: rgba(220, 0, 0, 0.85);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    z-index: 999;
+    font-size: 15px;
+    animation: glow 1.5s infinite;
+  }
+  @keyframes glow {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+    100% { filter: brightness(1); }
+  }
 
-  <div style="text-align:center; margin-top:20px;">
-    <a href="/change-password"
-       style="background:#2196F3; color:white; padding:10px 14px; border-radius:6px; text-decoration:none;">
-      🔐 Đổi mật khẩu
-    </a>
+  /* MAIN BOX GIỐNG FORUM */
+  .profile-container {
+    max-width: 900px;
+    margin: 60px auto 20px;
+    background: #ffcc80;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #f57c00;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* BLOCK INFO */
+  .block {
+    background: #ffe0b2;
+    padding: 20px;
+    border-radius: 8px;
+    line-height: 1.6;
+  }
+
+  /* TABS GIỐNG FORUM */
+  .tabs {
+    display:flex;
+    justify-content:space-between;
+    background:#f0faff;
+    border-radius:6px;
+    overflow:hidden;
+    margin-bottom:15px;
+  }
+  .tabs a {
+    flex:1;
+    padding:10px;
+    font-weight:bold;
+    text-align:center;
+    text-decoration:none;
+    color:#000;
+    display:block;
+  }
+  .tabs a:nth-child(1){ background:#e0f7ff; }
+  .tabs a:nth-child(2){ background:white; }
+
+  /* BUTTON */
+  .btn-change {
+    background:#1e88e5;
+    color:white;
+    padding:10px 14px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+    display:inline-block;
+  }
+
+  @media(max-width:760px){
+    .tet-banner{ font-size:13px; }
+  }
+</style>
+
+<!-- 🎉 Banner -->
+<div class="tet-banner">
+  🧧 CHÚC MỪNG NĂM MỚI 2025 - NRO KUNZ 🎉 | Săn quà Tết - Nhận lì xì - Đăng nhập nhận giftcode 🧧
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tetIcons = ["🌸","🌼","🧧","✨","🎇","🧨"];
+
+    // 🌸🌼🧧 hiệu ứng tết rơi
+    for (let i = 0; i < 55; i++) {
+      let item = document.createElement("div");
+      item.className = "tet-item";
+      item.textContent = tetIcons[Math.floor(Math.random() * tetIcons.length)];
+      item.style.left = Math.random() * 100 + "%";
+      item.style.animationDuration = 4 + Math.random() * 7 + "s";
+      item.style.fontSize = (18 + Math.random() * 25) + "px";
+      item.style.animationDelay = Math.random() * 4 + "s";
+      document.body.appendChild(item);
+    }
+
+    // ❄ hiệu ứng tuyết
+    for (let i = 0; i < 30; i++) {
+      let snow = document.createElement("div");
+      snow.className = "snowflake";
+      snow.textContent = "❄";
+      snow.style.left = Math.random() * 100 + "%";
+      snow.style.animationDuration = 4 + Math.random() * 6 + "s";
+      snow.style.fontSize = (12 + Math.random() * 18) + "px";
+      snow.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(snow);
+    }
+
+    // ✨ spark lấp lánh
+    for (let i = 0; i < 25; i++) {
+      let s = document.createElement("div");
+      s.className = "spark";
+      s.style.top = Math.random() * 100 + "vh";
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.animationDelay = Math.random() * 2 + "s";
+      document.body.appendChild(s);
+    }
+  });
+</script>
+
+<div class="profile-container">
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <a href="/forum">Diễn đàn</a>
+    <a href="/">Góp ý</a>
+  </div>
+
+  <div class="block">
+    <h2 style="text-align:center; margin-top:0;">👤 Thông tin tài khoản</h2>
+
+    <p><b>Tên đăng nhập:</b> <%= user.username %></p>
+
+    <p><b>Trạng thái thành viên:</b>
+      <% if (user.active == 1) { %>
+        <span style="color:green; font-weight:bold;">ĐÃ MỞ THÀNH VIÊN ✔</span>
+      <% } else { %>
+        <span style="color:red; font-weight:bold;">CHƯA MỞ ❌</span>
+      <% } %>
+    </p>
+
+    <p><b>Số dư tài khoản (VNĐ):</b>
+      <span style="color:#d32f2f; font-weight:bold;"><%= user.vnd.toLocaleString() %>đ</span>
+    </p>
+
+    <div style="text-align:center; margin-top:20px;">
+      <a href="/change-password" class="btn-change">
+        🔐 Đổi mật khẩu
+      </a>
+    </div>
   </div>
 
 </div>
