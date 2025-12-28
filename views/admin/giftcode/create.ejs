@@ -378,10 +378,10 @@
   function addItem() {
     const id = parseInt(selectedItemId.value);
     const qty = parseInt(document.getElementById("qtyInput").value);
-
+    const name = selectedItemName.value;
     if (!id) return alert("⚠ Vui lòng chọn item trước!");
 
-    itemsArr.push({ id, quantity: qty });
+    itemsArr.push({ id, name, quantity: qty });
     renderItems();
   }
 
@@ -391,7 +391,7 @@
     itemsArr.forEach((it, index) => {
       ul.innerHTML += `
         <li>
-          ✅ Item ID: <b>${it.id}</b> | SL: <b>${it.quantity}</b>
+         ✅ Item Name: <b>${it.name}</b> | SL: <b>${it.quantity}</b>
           <button type="button" onclick="removeItem(${index})"
             style="background:red; color:white; border:none; border-radius:4px; padding:3px 7px; margin-left:8px;">
             ❌
@@ -406,9 +406,6 @@
     renderItems();
   }
 
-  // =============================
-  // 🔍 SEARCH OPTION AJAX
-  // =============================
   const optionSearch = document.getElementById("optionSearch");
   const optionResults = document.getElementById("optionResults");
   const selectedOptionId = document.getElementById("selectedOptionId");
@@ -441,42 +438,54 @@
         div.innerHTML = `<b>${op.id}</b> - ${op.name}`;
         div.onclick = () => {
           selectedOptionId.value = op.id;
-          selectedOptionName.value = `${op.id} - ${op.name}`;
+          selectedOptionName.value = op.name;
           optionResults.style.display = "none";
         };
         optionResults.appendChild(div);
       });
     }, 250);
   });
-
-  // =============================
-  // ➕ ADD OPTION
-  // =============================
   function addOption() {
     const id = parseInt(selectedOptionId.value);
     const param = parseInt(document.getElementById("paramInput").value);
-
+    const name = selectedOptionName.value;
     if (!id) return alert("⚠ Vui lòng chọn option trước!");
 
-    optionsArr.push({ id, param });
+    optionsArr.push({ id, name, param });
     renderOptions();
   }
 
-  function renderOptions() {
-    const ul = document.getElementById("optionList");
-    ul.innerHTML = "";
-    optionsArr.forEach((op, index) => {
-      ul.innerHTML += `
-        <li>
-          ✅ Option ID: <b>${op.id}</b> | Param: <b>${op.param}</b>
-          <button type="button" onclick="removeOption(${index})"
-            style="background:red; color:white; border:none; border-radius:4px; padding:3px 7px; margin-left:8px;">
-            ❌
-          </button>
-        </li>
-      `;
-    });
-  }
+ function renderOptions() {
+  const ul = document.getElementById("optionList");
+  ul.innerHTML = "";
+
+  optionsArr.forEach((op, index) => {
+
+    // ✅ Nếu name có "+#%" thì thay # thành param
+    let displayText = op.name;
+
+    if (displayText.includes("+#%")) {
+      displayText = displayText.replace("+#%", `+${op.param}%`);
+    } else if (displayText.includes("+#")) {
+      displayText = displayText.replace("+#", `+${op.param}`);
+    } else {
+      // fallback
+      displayText = `+${op.param} ${displayText}`;
+    }
+
+    ul.innerHTML += `
+      <li>
+        ✅ <b>${displayText}</b>
+        <button type="button" onclick="removeOption(${index})"
+          style="background:red; color:white; border:none; border-radius:4px; padding:3px 7px; margin-left:8px;">
+          ❌
+        </button>
+      </li>
+    `;
+  });
+}
+
+
 
   function removeOption(i) {
     optionsArr.splice(i, 1);
