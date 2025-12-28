@@ -99,12 +99,12 @@ exports.create = async (req, res) => {
 };
 
 exports.store = async (req, res) => {
+  const conn = await pool.getConnection(); // ✅ lấy connection để transaction
   try {
     console.log("BODY POST:", req.body);
 
     const { code, limit, expired, items, options } = req.body;
 
-    // ✅ validate tối thiểu
     if (!code || !limit || !expired) {
       return res.send("Thiếu dữ liệu: code/limit/expired");
     }
@@ -112,23 +112,37 @@ exports.store = async (req, res) => {
     const listItem = items && items !== "" ? items : "[]";
     const itemoption = options && options !== "" ? options : "[]";
 
-    const [result] = await pool.execute(`
+    await conn.beginTransaction();
+
+    // ✅ lock bảng để tránh 2 admin tạo cùng lúc bị trùng id
+    const [[row]] = await conn.query("SELECT MAX(id) AS maxId FROM giftcode FOR UPDATE");
+
+    const newId = (row.maxId === null ? 0 : Number(row.maxId)) + 1;
+
+    console.log("✅ NEW ID sẽ insert:", newId);
+
+    const [result] = await conn.execute(`
       INSERT INTO giftcode
-        (code, type, \`delete\`, \`limit\`, listUser, listItem, bagCount, itemoption, create_date, expired)
+        (id, code, type, \`delete\`, \`limit\`, listUser, listItem, bagCount, itemoption, create_date, expired)
       VALUES
-        (?, 1, 1, ?, '[]', ?, 1, ?, NOW(), ?)
-    `, [code, Number(limit), listItem, itemoption, expired]);
+        (?, ?, 1, 1, ?, '[]', ?, 1, ?, NOW(), ?)
+    `, [newId, code, Number(limit), listItem, itemoption, expired]);
 
-    console.log("INSERT RESULT:", result);
+    await conn.commit();
+    conn.release();
 
-    // ✅ nếu insert thành công sẽ có insertId
+    console.log("✅ INSERT RESULT:", result);
+
     if (result.affectedRows > 0) {
       return res.redirect("/admin/giftcode");
-    } else {
-      return res.send("Insert thất bại - affectedRows=0");
     }
 
+    return res.send("Insert thất bại - affectedRows=0");
+
   } catch (err) {
+    await conn.rollback();
+    conn.release();
+
     console.error("STORE GIFTCODE ERROR:", err);
     return res.send("Lỗi khi tạo giftcode: " + err.message);
   }
