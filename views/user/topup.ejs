@@ -31,7 +31,6 @@
     font-size:14px;
   }
 
-  /* ✅ Cân đối field label nạp tiền */
   .form-group{
     margin-top: 14px;
     display: flex;
@@ -182,16 +181,15 @@
   <h2>💰 Nạp tiền PayOS</h2>
   <p>Nhập số tiền cần nạp, hệ thống sẽ tạo QR thanh toán tự động</p>
 
-  <!-- ✅ Field nạp tiền cân đối -->
   <div class="form-group">
     <label for="amount" class="label-amount">Số tiền cần nạp (VNĐ)</label>
 
     <div class="input-wrap">
       <span class="currency">₫</span>
-      <input id="amount" class="input-amount" type="number" min="1000" placeholder="VD: 50.000">
+      <input id="amount" class="input-amount" type="number" min="10000" placeholder="VD: 50.000">
     </div>
 
-    <div class="hint">Tối thiểu 1.000 VNĐ</div>
+    <div class="hint">Tối thiểu 10.000 VNĐ</div>
   </div>
 
   <button id="btnTopup" class="btn-topup">📌 Tạo QR thanh toán</button>
@@ -227,8 +225,8 @@
     alertBox.style.display = "none";
     qrBox.style.display = "none";
 
-    if(!amount || amount < 1000){
-      showAlert("error","❌ Số tiền phải >= 1000 VNĐ");
+    if(!amount || amount < 10000){
+      showAlert("error","❌ Số tiền phải >= 10000 VNĐ");
       return;
     }
 
@@ -251,9 +249,8 @@
         return;
       }
 
-      // ✅ hiển thị QR ngay tại trang
       qrBox.style.display = "block";
-      qrImage.src = data.qrCode; // base64 image
+      qrImage.src = data.qrCode; 
       qrInfo.innerHTML = `
         <b>Số tiền:</b> <span style="color:#d32f2f">${Number(data.amount).toLocaleString()}đ</span><br>
         <b>Mã đơn:</b> ${data.orderCode}<br>

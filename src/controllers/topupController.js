@@ -6,7 +6,6 @@ exports.getTopupPage = (req, res) => {
   res.render("user/topup", { error: null });
 };
 
-// ✅ Tạo nạp tiền
 exports.createTopup = async (req, res) => {
   try {
     if (!req.session.user) return res.status(401).json({ success: false });
@@ -14,15 +13,13 @@ exports.createTopup = async (req, res) => {
     const username = req.session.user.username;
     const amount = parseInt(req.body.amount);
 
-    if (!amount || amount < 1000) {
+    if (!amount || amount < 10000) {
       return res.json({ success: false, message: "Số tiền không hợp lệ!" });
     }
 
-    // ✅ orderCode phải unique
     const orderCode = Date.now(); 
     const description = `NAP_${username}_${orderCode}`;
 
-    // ✅ tạo link thanh toán PayOS
     const paymentData = {
       orderCode,
       amount,
@@ -33,13 +30,11 @@ exports.createTopup = async (req, res) => {
 
     const paymentLink = await payos.paymentRequests.create(paymentData);
 
-    // ✅ QR Code PayOS thường là base64, cần thêm prefix để hiển thị ảnh
     let qrCode = paymentLink.qrCode;
     if (qrCode && !qrCode.startsWith("data:image")) {
       qrCode = "data:image/png;base64," + qrCode;
     }
 
-    // ✅ lưu DB
     await pool.execute(
       `INSERT INTO top_up(username, amount, orderCode, description, status, transId) 
        VALUES (?, ?, ?, ?, 'PENDING', NULL)`,
@@ -60,31 +55,29 @@ exports.createTopup = async (req, res) => {
   }
 };
 
-// ✅ PayOS Webhook
+
 exports.payosWebhook = async (req, res) => {
   try {
     console.log("===== PAYOS WEBHOOK HIT =====");
     console.log(JSON.stringify(req.body, null, 2));
 
-    // ✅ verify webhook (SDK v2)
+
     const webhookData = await payos.webhooks.verify(req.body);
 
     const data = webhookData.data || webhookData;
 
     const orderCode = data.orderCode;
     const paidAmount = data.amount;
-    const code = data.code; // "00" = success
+    const code = data.code; 
     const transactionId = data.paymentLinkId || data.reference || null;
 
     if (!orderCode) return res.status(400).send("missing orderCode");
 
-    // ✅ chỉ xử lý thành công
     if (code && code !== "00") {
       await pool.execute("UPDATE top_up SET status='FAILED' WHERE orderCode=?", [orderCode]);
       return res.send("ignored");
     }
 
-    // ✅ lấy đơn top_up đang pending
     const [rows] = await pool.execute(
       "SELECT * FROM top_up WHERE orderCode=?",
       [orderCode]
@@ -94,10 +87,8 @@ exports.payosWebhook = async (req, res) => {
 
     const order = rows[0];
 
-    // ✅ Nếu đã PAID thì bỏ qua (tránh cộng tiền 2 lần)
     if (order.status === "PAID") return res.send("already processed");
 
-    // ✅ chống hack: số tiền trong webhook phải khớp số tiền trong DB
     if (parseInt(order.amount) !== parseInt(paidAmount)) {
       console.log("❌ Amount mismatch:", order.amount, paidAmount);
       await pool.execute(
@@ -109,13 +100,11 @@ exports.payosWebhook = async (req, res) => {
 
     const username = order.username;
 
-    // ✅ update top_up -> PAID
     await pool.execute(
       "UPDATE top_up SET status='PAID', transId=?, paid_at=NOW() WHERE orderCode=?",
       [transactionId, orderCode]
     );
 
-    // ✅ cộng tiền
     await pool.execute(
       "UPDATE account SET vnd = vnd + ?, tongnap = tongnap + ? WHERE username = ?",
       [paidAmount, paidAmount, username]

@@ -5,7 +5,6 @@ const topupController = require("../controllers/topupController");
 router.get("/topup", topupController.getTopupPage);
 router.post("/topup/create", topupController.createTopup);
 
-// ✅ Thanh toán thành công → quay về trang chủ
 router.get("/topup/success", (req, res) => {
   res.send(`
     <html>
@@ -53,7 +52,7 @@ router.get("/topup/cancel", (req, res) => {
   `);
 });
 
-// ✅ Webhook PayOS
+
 router.post("/payos/webhook", topupController.payosWebhook);
 
 module.exports = router;
