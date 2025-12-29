@@ -2,13 +2,13 @@ const pool = require("../../config/db");
 
 exports.getAccounts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = 10; // số dòng mỗi trang
+  const limit = 30; 
   const offset = (page - 1) * limit;
 
   const search = req.query.search ? req.query.search.trim() : "";
 
   try {
-    // ✅ 1) Query lấy dữ liệu theo search + phân trang
+
     const queryData = `
       SELECT id, username, password, admin, active, ban, tongnap, coin, vnd, mocnap
       FROM account
@@ -78,7 +78,7 @@ exports.toggleActive = async (req, res) => {
   }
 };
 
-// ✅ Toggle BAN
+
 exports.toggleBan = async (req, res) => {
   const { id } = req.params;
 
