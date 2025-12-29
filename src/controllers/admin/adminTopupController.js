@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+const pool = require("../../config/db");
 
 // ✅ View danh sách nạp tiền
 exports.viewTopup = async (req, res) => {
