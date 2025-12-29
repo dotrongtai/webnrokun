@@ -1,5 +1,74 @@
 <%- include("../partials/header", { title: "Đăng ký tài khoản" }) %>
+<style>
+  .form-group {
+  margin-bottom: 14px;
+}
 
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #111;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 11px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #2196F3;
+  box-shadow: 0 0 0 3px rgba(33,150,243,0.25);
+}
+
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 42px; /* chừa chỗ icon */
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+  opacity: 0.75;
+  transition: 0.2s;
+}
+
+.toggle-pass:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.15);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #d6a63d;
+  color: white;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-submit:hover {
+  filter: brightness(1.05);
+}
+
+</style>
 
 <div class="snow">
   <% for (let i = 0; i < 35; i++) { %>
@@ -30,28 +99,34 @@
     margin:auto;
     border-radius:8px;
   ">
-    <form action="/register" method="POST">
+  <form action="/register" method="POST">
 
-      <label><b>Tài khoản:</b></label>
-      <input type="text" name="username" required minlength="3" maxlength="20"
-             style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:12px;">
+  <div class="form-group">
+    <label><b>Tài khoản:</b></label>
+    <input type="text" name="username" required minlength="3" maxlength="20">
+  </div>
 
-      <label><b>Mật khẩu:</b></label>
-      <input type="password" name="password" required minlength="5" maxlength="20"
-             style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:12px;">
+  <div class="form-group">
+    <label><b>Mật khẩu:</b></label>
+    <div class="password-wrap">
+      <input type="password" name="password" required minlength="5" maxlength="20" id="password">
+      <span class="toggle-pass" data-target="password">👁️</span>
+    </div>
+  </div>
 
-      <label><b>Nhập lại mật khẩu:</b></label>
-      <input type="password" name="repassword" required minlength="5" maxlength="20"
-             style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:12px;">
+  <div class="form-group">
+    <label><b>Nhập lại mật khẩu:</b></label>
+    <div class="password-wrap">
+      <input type="password" name="repassword" required minlength="5" maxlength="20" id="repassword">
+      <span class="toggle-pass" data-target="repassword">👁️</span>
+    </div>
+  </div>
 
-      <button type="submit" style="
-        width:100%; padding:12px; border:none; background:#2196F3;
-        color:white; border-radius:6px; font-size:16px; cursor:pointer;
-      ">
-        Đăng ký ngay
-      </button>
+  <button type="submit" class="btn-submit">
+    Đăng ký ngay
+  </button>
 
-    </form>
+</form>
 
     <% if (msg) { %>
       <div style="
@@ -66,5 +141,25 @@
   </div>
 
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".toggle-pass").forEach(icon => {
+      icon.addEventListener("click", () => {
+        const targetId = icon.getAttribute("data-target");
+        const input = document.getElementById(targetId);
+
+        if (!input) return;
+
+        if (input.type === "password") {
+          input.type = "text";
+          icon.textContent = "🙈";
+        } else {
+          input.type = "password";
+          icon.textContent = "👁️";
+        }
+      });
+    });
+  });
+</script>
 
 <%- include("../partials/footer") %>
