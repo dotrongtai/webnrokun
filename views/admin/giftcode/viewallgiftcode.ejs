@@ -1,4 +1,4 @@
-
+<%- include("../partials/header", { title: "Quản lý GiftCode" }) %>
 
 <style>
   *{ box-sizing:border-box; }
@@ -10,6 +10,7 @@
     overflow-x: hidden;
   }
 
+  /* ❄ snow */
   .snowflake {
     position: fixed;
     top: -10px;
@@ -24,6 +25,7 @@
     to { transform: translateY(110vh); opacity: 0.3; }
   }
 
+  /* 🌸 tet icons */
   .tet-item {
     position: fixed;
     top: -30px;
@@ -37,6 +39,7 @@
     to { transform: translateY(120vh) rotate(360deg); opacity: 0.35; }
   }
 
+  /* ✨ spark */
   .spark {
     position: fixed;
     width: 6px;
@@ -54,7 +57,7 @@
     100% { transform: scale(0.5); opacity: 0.2; }
   }
 
- 
+  /* banner */
   .tet-banner {
     position: fixed;
     top: 0; left: 0;
@@ -74,7 +77,7 @@
     100% { filter: brightness(1); }
   }
 
-
+  /* ✅ wrapper đồng bộ */
   .admin-wrapper {
     width: 100%;
     max-width: 1280px;
@@ -87,7 +90,7 @@
     align-items: flex-start;
   }
 
-
+  /* ✅ sidebar đồng bộ */
   .sidebar {
     width: 260px;
     flex-shrink: 0;
@@ -127,7 +130,7 @@
     color: white;
   }
 
-
+  /* ✅ content đồng bộ */
   .content {
     flex: 1;
     min-width: 0;
@@ -142,7 +145,7 @@
     color: #d84315;
   }
 
-
+  /* ✅ nút tạo giống các trang khác */
   .btn-create {
     display: inline-block;
     background: #43a047;
@@ -158,6 +161,7 @@
     transform: translateY(-1px);
   }
 
+  /* ✅ bảng container giống Accounts */
   .table-wrap {
     width: 100%;
     overflow-x: auto;
@@ -195,6 +199,7 @@
     background: #fff3e0;
   }
 
+  /* ✅ ô reward, users cho xuống dòng */
   td.reward-col {
     max-width: 320px;
     word-break: break-word;
@@ -212,7 +217,7 @@
     text-align: left;
   }
 
-
+  /* mobile */
   @media(max-width:760px){
     .tet-banner{ font-size:13px; }
     .admin-wrapper{ flex-direction: column; }
@@ -270,7 +275,8 @@
     <a href="/admin/accounts">👤 Quản lý tài khoản</a>
     <a href="/admin/topup">💰 Quản lý nạp tiền</a>
     <a href="/admin/giftcode" class="active">🎁 Quản lý GiftCode</a>
-    <a href="/" style="background:#e53935; color:white; border:none;">⬅ Về trang chủ</a>
+    <a href="/admin/server">🖥 Quản lý server</a>
+    <a href="https://nrokunz.online/" style="background:#e53935; color:white; border:none;">⬅ Về trang chủ</a>
   </div>
 
   <div class="content">
