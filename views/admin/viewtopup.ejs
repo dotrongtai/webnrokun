@@ -1,29 +1,108 @@
 <%- include("../partials/header", { title: "Quản lý nạp tiền" }) %>
 
 <style>
-  .admin-wrapper {
-    max-width: 1200px;
-    margin: 20px auto;
-    display: flex;
-    gap: 15px;
-    position: relative;
-    z-index: 5;
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: linear-gradient(#86c5f8, #fff);
+    font-family: Arial;
+    overflow-x: hidden;
   }
 
+  /* ===== Snow / Tet ===== */
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 18px;
+    opacity: 0.9;
+    pointer-events: none;
+    animation: fallSnow linear infinite;
+    z-index: 1;
+  }
+  @keyframes fallSnow {
+    to { transform: translateY(110vh); opacity: 0.3; }
+  }
+
+  .tet-item {
+    position: fixed;
+    top: -30px;
+    font-size: 24px;
+    pointer-events: none;
+    animation: fallTet linear infinite;
+    opacity: 0.9;
+    z-index: 2;
+  }
+  @keyframes fallTet {
+    to { transform: translateY(120vh) rotate(360deg); opacity: 0.35; }
+  }
+
+  .spark {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: gold;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: sparkle 2s infinite;
+    z-index: 2;
+  }
+  @keyframes sparkle {
+    0% { transform: scale(0.5); opacity: 0.2; }
+    50% { transform: scale(1.4); opacity: 1; }
+    100% { transform: scale(0.5); opacity: 0.2; }
+  }
+
+  /* ===== Banner ===== */
+  .tet-banner {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 8px 0;
+    background: rgba(220, 0, 0, 0.85);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    z-index: 999;
+    font-size: 15px;
+    animation: glow 1.5s infinite;
+  }
+  @keyframes glow {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+    100% { filter: brightness(1); }
+  }
+
+  /* ===== Wrapper ===== */
+  .admin-wrapper {
+    width: 100%;
+    max-width: 1280px;
+    margin: 70px auto 25px;
+    display: flex;
+    gap: 18px;
+    padding: 0 15px;
+    position: relative;
+    z-index: 10;
+    align-items: flex-start;
+  }
+
+  /* ===== Sidebar ===== */
   .sidebar {
     width: 260px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    flex-shrink: 0;
+    background: #ffcc80;
+    border-radius: 12px;
+    border: 2px solid #f57c00;
     padding: 15px;
     height: fit-content;
   }
 
   .sidebar h3 {
     text-align: center;
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #d32f2f;
+    margin: 0 0 15px;
+    color: #d84315;
   }
 
   .sidebar a {
@@ -33,32 +112,41 @@
     border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
-    color: #333;
-    background: #f7f7f7;
+    color: #000;
+    background: #ffe0b2;
+    border: 1px solid #f57c00;
     transition: 0.2s;
   }
 
   .sidebar a:hover {
-    background: #ffe082;
+    background: #ffd180;
     transform: translateX(3px);
   }
 
   .sidebar a.active {
-    background: #ffcc80;
-    color: #000;
+    background: #ff9800;
+    color: white;
   }
 
+  /* ===== Content ===== */
   .content {
     flex: 1;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.12);
-    padding: 20px;
+    min-width: 0;
+    background: #ffcc80;
+    border-radius: 12px;
+    border: 2px solid #f57c00;
+    padding: 18px;
   }
 
   .content h2 {
     margin-top: 0;
-    color: #1976d2;
+    color: #d84315;
+  }
+
+  .muted{
+    margin-top: 6px;
+    color:#6b4b2a;
+    font-size: 13px;
   }
 
   /* ===== Filters ===== */
@@ -76,39 +164,44 @@
     gap: 10px;
     align-items:center;
     flex-wrap: wrap;
+    width: 100%;
   }
 
   .search-input{
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    min-width: 260px;
+    flex: 1;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #f57c00;
     outline: none;
   }
 
   .search-input:focus{
-    border-color:#1976d2;
-    box-shadow:0 0 0 4px rgba(25,118,210,0.12);
+    box-shadow:0 0 0 3px rgba(245,124,0,0.25);
   }
 
   .select{
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #f57c00;
     outline: none;
     cursor:pointer;
+    font-weight: bold;
   }
 
   .btn-refresh{
-    padding: 10px 12px;
+    height: 38px;
+    padding: 0 14px;
     border: none;
-    border-radius: 10px;
-    background: #1976d2;
+    border-radius: 8px;
+    background: #43a047;
     color: white;
     font-weight: bold;
     cursor:pointer;
     transition: 0.2s;
   }
+
   .btn-refresh:hover{
     filter:brightness(1.08);
     transform: translateY(-1px);
@@ -118,8 +211,9 @@
   .table-wrap{
     width: 100%;
     overflow-x:auto;
-    border: 1px solid #eee;
     border-radius: 12px;
+    border: 1px solid #f57c00;
+    background: white;
   }
 
   table{
@@ -129,89 +223,127 @@
     background: #fff;
   }
 
-  th, td{
-    padding: 12px 12px;
-    border-bottom: 1px solid #f1f1f1;
-    text-align: left;
+  th{
+    background: #ffe0b2;
+    padding: 10px;
+    border-bottom: 2px solid #f57c00;
+    color: #d84315;
     font-size: 14px;
+    text-align: center;
     white-space: nowrap;
   }
 
-  th{
-    background: #f7faff;
-    color: #1a237e;
-    font-weight: 800;
-    position: sticky;
-    top: 0;
-    z-index: 1;
+  td{
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 13px;
+    white-space: nowrap;
   }
 
   tr:hover td{
-    background: #fffde7;
+    background: #fff3e0;
   }
 
-  /* ===== Status badge ===== */
+  /* ===== Badge Status ===== */
   .badge{
     display:inline-flex;
     align-items:center;
+    justify-content:center;
     gap:6px;
-    padding: 6px 10px;
+    padding: 3px 9px;
     border-radius: 999px;
     font-weight: 800;
-    font-size: 12px;
+    font-size: 10px;
+    color: white;
+    text-transform: uppercase;
   }
 
-  .badge.pending{ background:#fff3cd; color:#8a6d3b; border: 1px solid #ffeeba; }
-  .badge.paid{ background:#d4edda; color:#155724; border: 1px solid #c3e6cb; }
-  .badge.failed{ background:#f8d7da; color:#721c24; border: 1px solid #f5c6cb; }
+  .badge.pending{ background:#ff9800; }
+  .badge.paid{ background:#2e7d32; }
+  .badge.failed{ background:#c62828; }
 
-  /* Amount */
   .amount{
     font-weight: 900;
     color:#d32f2f;
   }
 
-  .muted{
-    color:#666;
-    font-size: 13px;
-  }
-
-  /* Empty */
   .empty{
     padding: 18px;
     text-align:center;
     color:#777;
   }
 
-  /* Mobile */
-  @media (max-width: 950px){
-    .admin-wrapper{ flex-direction: column; }
-    .sidebar{ width: 100%; }
-    .search-input{ min-width: 100%; width: 100%; }
+  @media(max-width:760px) {
+    .tet-banner { font-size: 13px; }
+    .admin-wrapper { flex-direction: column; }
+    .sidebar { width: 100%; }
+    .filter-left { flex-direction: column; }
+    .search-input { width: 100%; }
+    .select { width: 100%; }
+    .btn-refresh { width: 100%; }
   }
 </style>
 
+<div class="tet-banner">
+  🧧 CHÚC MỪNG NĂM MỚI 2025 - ADMIN KHU VỰC 🎉 | Quản lý nạp tiền PayOS 🧧
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tetIcons = ["🌸","🌼","🧧","✨","🎇","🧨"];
+
+    for (let i = 0; i < 55; i++) {
+      let item = document.createElement("div");
+      item.className = "tet-item";
+      item.textContent = tetIcons[Math.floor(Math.random() * tetIcons.length)];
+      item.style.left = Math.random() * 100 + "%";
+      item.style.animationDuration = 4 + Math.random() * 7 + "s";
+      item.style.fontSize = (18 + Math.random() * 25) + "px";
+      item.style.animationDelay = Math.random() * 4 + "s";
+      document.body.appendChild(item);
+    }
+
+    for (let i = 0; i < 30; i++) {
+      let snow = document.createElement("div");
+      snow.className = "snowflake";
+      snow.textContent = "❄";
+      snow.style.left = Math.random() * 100 + "%";
+      snow.style.animationDuration = 4 + Math.random() * 6 + "s";
+      snow.style.fontSize = (12 + Math.random() * 18) + "px";
+      snow.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(snow);
+    }
+
+    for (let i = 0; i < 25; i++) {
+      let s = document.createElement("div");
+      s.className = "spark";
+      s.style.top = Math.random() * 100 + "vh";
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.animationDelay = Math.random() * 2 + "s";
+      document.body.appendChild(s);
+    }
+  });
+</script>
+
 <div class="admin-wrapper">
 
-  <!-- Sidebar -->
   <div class="sidebar">
     <h3>⚙ ADMIN MENU</h3>
-
     <a href="/dashboard">📊 Tổng quan</a>
     <a href="/admin/accounts">👤 Quản lý tài khoản</a>
     <a href="/admin/topup" class="active">💰 Quản lý nạp tiền</a>
     <a href="/admin/giftcode">🎁 Quản lý GiftCode</a>
     <a href="/admin/server">🖥 Quản lý server</a>
-    <a href="/" style="background:#e53935; color:white;">⬅ Về trang chủ</a>
+    <a href="/" style="background:#e53935; color:white; border:none;">⬅ Về trang chủ</a>
   </div>
 
-  <!-- Content -->
   <div class="content">
-    <h2>💰 QUẢN LÝ NẠP TIỀN</h2>
-    <p class="muted">Danh sách giao dịch topup PayOS (theo thời gian mới nhất)</p>
-    <hr>
+    <h2>💰 Quản lý nạp tiền</h2>
+    <p class="muted">Danh sách giao dịch topup PayOS (mới nhất)</p>
 
-    <!-- Filters -->
+    <hr style="border:1px solid #f57c00; margin:15px 0;">
+
     <div class="filter-bar">
       <div class="filter-left">
         <input id="search" class="search-input" placeholder="🔎 Tìm username / orderCode / transId...">
@@ -222,12 +354,11 @@
           <option value="PAID">PAID</option>
           <option value="FAILED">FAILED</option>
         </select>
-      </div>
 
-      <button class="btn-refresh" onclick="window.location.reload()">🔄 Làm mới</button>
+        <button class="btn-refresh" onclick="window.location.reload()">🔄 Làm mới</button>
+      </div>
     </div>
 
-    <!-- Table -->
     <div class="table-wrap">
       <table id="topupTable">
         <thead>
@@ -243,6 +374,7 @@
             <th>Paid At</th>
           </tr>
         </thead>
+
         <tbody id="tableBody">
           <% if (!topups || topups.length === 0) { %>
             <tr>
@@ -251,10 +383,10 @@
           <% } else { %>
             <% topups.forEach((t, index) => { %>
               <tr class="row"
-                  data-username="<%= (t.username || '').toLowerCase() %>"
-                  data-ordercode="<%= String(t.orderCode || '').toLowerCase() %>"
-                  data-transid="<%= String(t.transId || '').toLowerCase() %>"
-                  data-status="<%= (t.status || 'PENDING') %>">
+                data-username="<%= (t.username || '').toLowerCase() %>"
+                data-ordercode="<%= String(t.orderCode || '').toLowerCase() %>"
+                data-transid="<%= String(t.transId || '').toLowerCase() %>"
+                data-status="<%= (t.status || 'PENDING') %>">
 
                 <td><%= index + 1 %></td>
                 <td><b><%= t.username %></b></td>
@@ -264,8 +396,7 @@
                 </td>
 
                 <td><%= t.orderCode || "-" %></td>
-
-                <td style="max-width:280px; overflow:hidden; text-overflow:ellipsis;">
+                <td style="max-width:260px; overflow:hidden; text-overflow:ellipsis;">
                   <%= t.description || "-" %>
                 </td>
 
@@ -281,7 +412,6 @@
                 </td>
 
                 <td><%= t.transId || "-" %></td>
-
                 <td><%= t.created_at ? new Date(t.created_at).toLocaleString('vi-VN') : "-" %></td>
                 <td><%= t.paid_at ? new Date(t.paid_at).toLocaleString('vi-VN') : "-" %></td>
               </tr>
@@ -292,7 +422,6 @@
     </div>
 
   </div>
-
 </div>
 
 <script>
