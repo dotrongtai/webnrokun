@@ -10,6 +10,7 @@ const adminGiftcodeRoutes = require("./routes/admin/adminGiftcode");
 const adminApiRoutes = require("./routes/admin/adminApi");
 const adminAccountsRoutes = require("./routes/admin/adminAccounts");
 const topupRoutes = require("./routes/topup");
+const adminTopupRoutes = require("./routes/admin/adminTopup");
 
 const session = require("express-session");
 
@@ -42,6 +43,8 @@ app.use("/", adminGiftcodeRoutes);
 app.use("/admin", adminAccountsRoutes);
 app.use("/admin/api", adminApiRoutes);
 app.use("/", topupRoutes);
+app.use("/admin", adminTopupRoutes);
+
 app.listen(process.env.PORT, "0.0.0.0", () => {
   console.log("Server chạy tại port: " + process.env.PORT);
 });

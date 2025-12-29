@@ -1,0 +1,324 @@
+<%- include("../partials/header", { title: "Quản lý nạp tiền" }) %>
+
+<style>
+  .admin-wrapper {
+    max-width: 1200px;
+    margin: 20px auto;
+    display: flex;
+    gap: 15px;
+    position: relative;
+    z-index: 5;
+  }
+
+  .sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    padding: 15px;
+    height: fit-content;
+  }
+
+  .sidebar h3 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #d32f2f;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 12px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #333;
+    background: #f7f7f7;
+    transition: 0.2s;
+  }
+
+  .sidebar a:hover {
+    background: #ffe082;
+    transform: translateX(3px);
+  }
+
+  .sidebar a.active {
+    background: #ffcc80;
+    color: #000;
+  }
+
+  .content {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    padding: 20px;
+  }
+
+  .content h2 {
+    margin-top: 0;
+    color: #1976d2;
+  }
+
+  /* ===== Filters ===== */
+  .filter-bar{
+    display:flex;
+    gap: 10px;
+    align-items:center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 12px 0 15px;
+  }
+
+  .filter-left{
+    display:flex;
+    gap: 10px;
+    align-items:center;
+    flex-wrap: wrap;
+  }
+
+  .search-input{
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    min-width: 260px;
+    outline: none;
+  }
+
+  .search-input:focus{
+    border-color:#1976d2;
+    box-shadow:0 0 0 4px rgba(25,118,210,0.12);
+  }
+
+  .select{
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    outline: none;
+    cursor:pointer;
+  }
+
+  .btn-refresh{
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
+    background: #1976d2;
+    color: white;
+    font-weight: bold;
+    cursor:pointer;
+    transition: 0.2s;
+  }
+  .btn-refresh:hover{
+    filter:brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  /* ===== Table ===== */
+  .table-wrap{
+    width: 100%;
+    overflow-x:auto;
+    border: 1px solid #eee;
+    border-radius: 12px;
+  }
+
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1050px;
+    background: #fff;
+  }
+
+  th, td{
+    padding: 12px 12px;
+    border-bottom: 1px solid #f1f1f1;
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  th{
+    background: #f7faff;
+    color: #1a237e;
+    font-weight: 800;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  tr:hover td{
+    background: #fffde7;
+  }
+
+  /* ===== Status badge ===== */
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  .badge.pending{ background:#fff3cd; color:#8a6d3b; border: 1px solid #ffeeba; }
+  .badge.paid{ background:#d4edda; color:#155724; border: 1px solid #c3e6cb; }
+  .badge.failed{ background:#f8d7da; color:#721c24; border: 1px solid #f5c6cb; }
+
+  /* Amount */
+  .amount{
+    font-weight: 900;
+    color:#d32f2f;
+  }
+
+  .muted{
+    color:#666;
+    font-size: 13px;
+  }
+
+  /* Empty */
+  .empty{
+    padding: 18px;
+    text-align:center;
+    color:#777;
+  }
+
+  /* Mobile */
+  @media (max-width: 950px){
+    .admin-wrapper{ flex-direction: column; }
+    .sidebar{ width: 100%; }
+    .search-input{ min-width: 100%; width: 100%; }
+  }
+</style>
+
+<div class="admin-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>⚙ ADMIN MENU</h3>
+
+    <a href="/dashboard">📊 Tổng quan</a>
+    <a href="/admin/accounts">👤 Quản lý tài khoản</a>
+    <a href="/admin/topup" class="active">💰 Quản lý nạp tiền</a>
+    <a href="/admin/giftcode">🎁 Quản lý GiftCode</a>
+    <a href="/admin/server">🖥 Quản lý server</a>
+    <a href="/" style="background:#e53935; color:white;">⬅ Về trang chủ</a>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h2>💰 QUẢN LÝ NẠP TIỀN</h2>
+    <p class="muted">Danh sách giao dịch topup PayOS (theo thời gian mới nhất)</p>
+    <hr>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+      <div class="filter-left">
+        <input id="search" class="search-input" placeholder="🔎 Tìm username / orderCode / transId...">
+
+        <select id="filterStatus" class="select">
+          <option value="ALL">Tất cả trạng thái</option>
+          <option value="PENDING">PENDING</option>
+          <option value="PAID">PAID</option>
+          <option value="FAILED">FAILED</option>
+        </select>
+      </div>
+
+      <button class="btn-refresh" onclick="window.location.reload()">🔄 Làm mới</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table id="topupTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Amount</th>
+            <th>OrderCode</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>TransId</th>
+            <th>Created At</th>
+            <th>Paid At</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <% if (!topups || topups.length === 0) { %>
+            <tr>
+              <td colspan="9" class="empty">Chưa có giao dịch nào.</td>
+            </tr>
+          <% } else { %>
+            <% topups.forEach((t, index) => { %>
+              <tr class="row"
+                  data-username="<%= (t.username || '').toLowerCase() %>"
+                  data-ordercode="<%= (t.orderCode || '').toLowerCase() %>"
+                  data-transid="<%= (t.transId || '').toLowerCase() %>"
+                  data-status="<%= (t.status || 'PENDING') %>">
+
+                <td><%= index + 1 %></td>
+                <td><b><%= t.username %></b></td>
+
+                <td class="amount">
+                  <%= Number(t.amount || 0).toLocaleString('vi-VN') %>đ
+                </td>
+
+                <td><%= t.orderCode || "-" %></td>
+
+                <td style="max-width:280px; overflow:hidden; text-overflow:ellipsis;">
+                  <%= t.description || "-" %>
+                </td>
+
+                <td>
+                  <% 
+                    const status = (t.status || "PENDING").toUpperCase();
+                    let cls = "pending";
+                    let icon = "⏳";
+                    if(status === "PAID"){ cls="paid"; icon="✅"; }
+                    if(status === "FAILED"){ cls="failed"; icon="❌"; }
+                  %>
+                  <span class="badge <%= cls %>"><%= icon %> <%= status %></span>
+                </td>
+
+                <td><%= t.transId || "-" %></td>
+
+                <td><%= t.created_at ? new Date(t.created_at).toLocaleString('vi-VN') : "-" %></td>
+                <td><%= t.paid_at ? new Date(t.paid_at).toLocaleString('vi-VN') : "-" %></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const searchInput = document.getElementById("search");
+  const statusFilter = document.getElementById("filterStatus");
+  const rows = document.querySelectorAll(".row");
+
+  function filterRows(){
+    const q = (searchInput.value || "").toLowerCase().trim();
+    const st = statusFilter.value;
+
+    rows.forEach(row => {
+      const username = row.dataset.username || "";
+      const orderCode = row.dataset.ordercode || "";
+      const transId = row.dataset.transid || "";
+      const status = row.dataset.status || "PENDING";
+
+      const matchQuery = !q || username.includes(q) || orderCode.includes(q) || transId.includes(q);
+      const matchStatus = (st === "ALL") || (status === st);
+
+      row.style.display = (matchQuery && matchStatus) ? "" : "none";
+    });
+  }
+
+  searchInput.addEventListener("input", filterRows);
+  statusFilter.addEventListener("change", filterRows);
+</script>
+
+<%- include("../partials/footer") %>
