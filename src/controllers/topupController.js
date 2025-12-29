@@ -30,8 +30,11 @@ exports.createTopup = async (req, res) => {
       returnUrl: `${process.env.BASE_URL}/topup/success`,
       cancelUrl: `${process.env.BASE_URL}/topup/cancel`
     };
+    const QRCode = require("qrcode");
 
     const paymentLink = await payos.paymentRequests.create(paymentData);
+    const qrText = paymentLink.qrCode;
+const qrCodeImage = await QRCode.toDataURL(qrText);
 
     // ✅ QR Code PayOS thường là base64, cần thêm prefix để hiển thị ảnh
     let qrCode = paymentLink.qrCode;
@@ -51,7 +54,7 @@ exports.createTopup = async (req, res) => {
       orderCode,
       amount,
       checkoutUrl: paymentLink.checkoutUrl,
-      qrCode
+      qrCode: qrCodeImage
     });
 
   } catch (err) {
