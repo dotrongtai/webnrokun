@@ -1,30 +1,41 @@
-
 <style>
+  *{ box-sizing:border-box; }
 
-  .admin-wrapper {
-    max-width: 1100px;
-    margin: 20px auto;
-    display: flex;
-    gap: 15px;
-    position: relative;
-    z-index: 5;
+  body {
+    margin: 0;
+    background: linear-gradient(#86c5f8, #fff);
+    font-family: Arial;
+    overflow-x: hidden;
   }
 
+  /* ===== wrapper đồng bộ ===== */
+  .admin-wrapper {
+    width: 100%;
+    max-width: 1280px;
+    margin: 70px auto 25px;
+    display: flex;
+    gap: 18px;
+    padding: 0 15px;
+    position: relative;
+    z-index: 10;
+    align-items: flex-start;
+  }
 
+  /* ===== sidebar ===== */
   .sidebar {
     width: 260px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    flex-shrink: 0;
+    background: #ffcc80;
+    border-radius: 12px;
+    border: 2px solid #f57c00;
     padding: 15px;
     height: fit-content;
   }
 
   .sidebar h3 {
     text-align: center;
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #d32f2f;
+    margin: 0 0 15px;
+    color: #d84315;
   }
 
   .sidebar a {
@@ -34,83 +45,169 @@
     border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
-    color: #333;
-    background: #f7f7f7;
+    color: #000;
+    background: #ffe0b2;
+    border: 1px solid #f57c00;
     transition: 0.2s;
   }
 
   .sidebar a:hover {
-    background: #ffe082;
+    background: #ffd180;
     transform: translateX(3px);
   }
 
   .sidebar a.active {
-    background: #ffcc80;
-    color: #000;
+    background: #ff9800;
+    color: white;
   }
 
+  /* ===== content ===== */
   .content {
     flex: 1;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.12);
-    padding: 20px;
+    min-width: 0;
+    background: #ffcc80;
+    border-radius: 12px;
+    border: 2px solid #f57c00;
+    padding: 22px;
   }
 
   .content h2 {
-    margin-top: 0;
-    color: #1976d2;
+    margin: 0;
+    color: #d84315;
+    font-size: 22px;
   }
 
- 
-  .card {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
+  /* ===== Khung chào Admin ===== */
+  .welcome-box{
     margin-top: 15px;
-    border-left: 5px solid #ff9800;
+    background: #fff3e0;
+    border: 1px solid #f57c00;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.08);
   }
 
-  .tet {
-    pointer-events: none;
+  .welcome-title{
+    font-size: 18px;
+    font-weight: bold;
+    color: #d84315;
+    margin-bottom: 6px;
+  }
+
+  .welcome-sub{
+    font-size: 14px;
+    color: #6b4b2a;
+    margin-bottom: 12px;
+  }
+
+  /* ===== Khung ảnh ở giữa ===== */
+  .image-box{
+    margin-top: 18px;
+    background: white;
+    border-radius: 14px;
+    border: 2px dashed #f57c00;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 260px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  }
+
+  .image-box img{
+    max-width: 90%;
+    max-height: 280px;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+
+  .image-placeholder{
+    color: #999;
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  /* Responsive */
+  @media(max-width:760px) {
+    .admin-wrapper { flex-direction: column; }
+    .sidebar { width: 100%; }
+  }
+</style>
+<style>
+  .neon-particle{
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 2;
-    overflow: hidden;
-  }
-
-  .tet span {
-    position: absolute;
-    top: -20px;
-    font-size: 20px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
     opacity: 0.9;
-    animation: tetFall linear infinite;
+    filter: blur(0.2px);
+    z-index: 5;
+
+    animation: neonFly linear infinite;
+    box-shadow: 0 0 12px currentColor, 0 0 25px currentColor;
   }
 
-  @keyframes tetFall {
-    to {
-      transform: translateY(105vh) rotate(360deg);
-      opacity: 0.4;
+  @keyframes neonFly{
+    0%{
+      transform: translate(var(--startX), var(--startY)) scale(0.5);
+      opacity: 0;
+    }
+    15%{
+      opacity: 1;
+    }
+    100%{
+      transform: translate(var(--endX), var(--endY)) scale(1.2);
+      opacity: 0;
     }
   }
 </style>
 
-<div class="tet">
-  <% const icons = ["🌸", "🌼", "🧧", "✨"]; %>
-  <% for (let i = 0; i < 40; i++) { %>
-    <span style="
-      left: <%= Math.random()*100 %>%;
-      animation-duration: <%= 3 + Math.random()*6 %>s;
-      animation-delay: <%= Math.random()*3 %>s;
-    ">
-      <%= icons[Math.floor(Math.random()*icons.length)] %>
-    </span>
-  <% } %>
-</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const colors = ["#ff1744","#ff9100","#00e5ff","#00e676","#d500f9","#ffea00"];
+
+    function spawnNeon(side){
+      const p = document.createElement("div");
+      p.className = "neon-particle";
+
+      const size = 5 + Math.random() * 12;
+      p.style.width = size + "px";
+      p.style.height = size + "px";
+
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      p.style.background = color;
+      p.style.color = color;
+
+      const startY = Math.random()*100;
+      const endY = startY + (Math.random()*40 - 20);
+
+      let startX = side === "left" ? -80 : window.innerWidth + 80;
+      let endX = side === "left" ? window.innerWidth + 80 : -80;
+
+      p.style.setProperty("--startX", startX + "px");
+      p.style.setProperty("--startY", startY + "vh");
+      p.style.setProperty("--endX", endX + "px");
+      p.style.setProperty("--endY", endY + "vh");
+
+      const duration = 4 + Math.random()*5;
+      p.style.animationDuration = duration + "s";
+
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(), duration*1000);
+    }
+
+    setInterval(()=>{
+      spawnNeon("left");
+      spawnNeon("right");
+    }, 120);
+  });
+</script>
 
 <div class="admin-wrapper">
-
 
   <div class="sidebar">
     <h3>⚙ ADMIN MENU</h3>
@@ -119,16 +216,23 @@
     <a href="/admin/accounts">👤 Quản lý tài khoản</a>
     <a href="/admin/topup">💰 Quản lý nạp tiền</a>
     <a href="/admin/giftcode">🎁 Quản lý GiftCode</a>
-   
   </div>
-
 
   <div class="content">
     <h2>👑 ADMIN DASHBOARD</h2>
-    <p>Xin chào Admin</b></p>
-    <hr>
+
+    <!-- ✅ Khung chào -->
+    <div class="welcome-box">
+      <div class="welcome-title">👋 Xin chào Zoe Kun</div>
+      <div class="welcome-sub">Chúc bạn ngày càng đẹp trai như Đỗ Trọng Tài🎉</div>
+    </div>
+
+    <!-- ✅ Khung ảnh giữa -->
+    <div class="image-box">
+       <img src="/image/adminbanner.png" alt="Admin Banner"> 
+
+    </div>
 
   </div>
 
 </div>
-
