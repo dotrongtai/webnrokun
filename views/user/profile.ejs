@@ -1,4 +1,4 @@
-<%- include("partials/header", { title: "Trang chủ NRO KunZ" }) %>
+<%- include("../partials/header", { title: "Trang cá nhân" }) %>
 
 <style>
   body {
@@ -8,7 +8,7 @@
     overflow-x: hidden;
   }
 
-  /* ❄ TUYẾT */
+
   .snowflake {
     position: fixed;
     top: -10px;
@@ -19,15 +19,11 @@
     animation: fallSnow linear infinite;
     z-index: 1;
   }
-
   @keyframes fallSnow {
-    to {
-      transform: translateY(110vh);
-      opacity: 0.3;
-    }
+    to { transform: translateY(110vh); opacity: 0.3; }
   }
 
-  /* 🌸🌼🧧 HIỆU ỨNG TẾT */
+
   .tet-item {
     position: fixed;
     top: -30px;
@@ -37,15 +33,10 @@
     opacity: 0.9;
     z-index: 2;
   }
-
   @keyframes fallTet {
-    to {
-      transform: translateY(120vh) rotate(360deg);
-      opacity: 0.35;
-    }
+    to { transform: translateY(120vh) rotate(360deg); opacity: 0.35; }
   }
 
-  /* ✨ SPARK */
   .spark {
     position: fixed;
     width: 6px;
@@ -57,14 +48,12 @@
     animation: sparkle 2s infinite;
     z-index: 2;
   }
-
   @keyframes sparkle {
     0% { transform: scale(0.5); opacity: 0.2; }
     50% { transform: scale(1.4); opacity: 1; }
     100% { transform: scale(0.5); opacity: 0.2; }
   }
 
-  /* 🎉 BANNER */
   .tet-banner {
     position: fixed;
     top: 0;
@@ -79,15 +68,13 @@
     font-size: 15px;
     animation: glow 1.5s infinite;
   }
-
   @keyframes glow {
     0% { filter: brightness(1); }
     50% { filter: brightness(1.25); }
     100% { filter: brightness(1); }
   }
 
-  /* MAIN BOX - giống forum */
-  .home-container {
+  .profile-container {
     max-width: 900px;
     margin: 60px auto 20px;
     background: #ffcc80;
@@ -98,21 +85,49 @@
     z-index: 10;
   }
 
+
   .block {
     background: #ffe0b2;
-    padding: 15px;
+    padding: 20px;
     border-radius: 8px;
-    margin-top: 15px;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
-  /* Mobile */
-  @media(max-width: 760px) {
-    .tet-banner { font-size: 13px; }
+  .tabs {
+    display:flex;
+    justify-content:space-between;
+    background:#f0faff;
+    border-radius:6px;
+    overflow:hidden;
+    margin-bottom:15px;
+  }
+  .tabs a {
+    flex:1;
+    padding:10px;
+    font-weight:bold;
+    text-align:center;
+    text-decoration:none;
+    color:#000;
+    display:block;
+  }
+  .tabs a:nth-child(1){ background:#e0f7ff; }
+  .tabs a:nth-child(2){ background:white; }
+
+  .btn-change {
+    background:#1e88e5;
+    color:white;
+    padding:10px 14px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+    display:inline-block;
+  }
+
+  @media(max-width:760px){
+    .tet-banner{ font-size:13px; }
   }
 </style>
 
-<!-- 🎉 Banner -->
 <div class="tet-banner">
   🧧 CHÚC MỪNG NĂM MỚI 2025 - NRO KUNZ 🎉 | Săn quà Tết - Nhận lì xì - Đăng nhập nhận giftcode 🧧
 </div>
@@ -121,7 +136,6 @@
   document.addEventListener("DOMContentLoaded", () => {
     const tetIcons = ["🌸","🌼","🧧","✨","🎇","🧨"];
 
-    // 🌸🌼🧧 rơi
     for (let i = 0; i < 55; i++) {
       let item = document.createElement("div");
       item.className = "tet-item";
@@ -133,7 +147,6 @@
       document.body.appendChild(item);
     }
 
-    // ❄ tuyết
     for (let i = 0; i < 30; i++) {
       let snow = document.createElement("div");
       snow.className = "snowflake";
@@ -145,7 +158,6 @@
       document.body.appendChild(snow);
     }
 
-    // ✨ spark
     for (let i = 0; i < 25; i++) {
       let s = document.createElement("div");
       s.className = "spark";
@@ -157,55 +169,37 @@
   });
 </script>
 
-<!-- MAIN CONTENT -->
-<div class="home-container">
+<div class="profile-container">
 
-  <!-- TABS (giống forum) -->
-  <div style="
-    display:flex;
-    justify-content:space-between;
-    background:#f0faff;
-    border-radius:6px;
-    overflow:hidden;
-    margin-bottom:15px;
-  ">
-
-    <a href="/forum" style="
-      flex:1;
-      padding:10px;
-      background:#e0f7ff;
-      font-weight:bold;
-      text-align:center;
-      text-decoration:none;
-      color:#000;
-      display:block;
-    ">
-      Diễn đàn
-    </a>
-
-    <a href="/" style="
-      flex:1;
-      padding:10px;
-      background:white;
-      font-weight:bold;
-      text-align:center;
-      text-decoration:none;
-      color:#000;
-      display:block;
-    ">
-      Góp ý
-    </a>
-
+  <div class="tabs">
+    <a href="/forum">Diễn đàn</a>
+    <a href="/">Góp ý</a>
   </div>
 
-  <!-- NEWS -->
   <div class="block">
-    <p>🔥 <b>Mở thành viên KunZ</b> <span style="color:red;">NEW!</span></p>
-    <p>💳 Khuyến mãi nạp thẻ</p>
-    <p>⚠ Danh sách lừa đảo</p>
-    <p>📢 Các thông báo hệ thống</p>
+    <h2 style="text-align:center; margin-top:0;">👤 Thông tin tài khoản</h2>
+
+    <p><b>Tên đăng nhập:</b> <%= user.username %></p>
+
+    <p><b>Trạng thái thành viên:</b>
+      <% if (user.active == 1) { %>
+        <span style="color:green; font-weight:bold;">ĐÃ MỞ THÀNH VIÊN ✔</span>
+      <% } else { %>
+        <span style="color:red; font-weight:bold;">CHƯA MỞ ❌</span>
+      <% } %>
+    </p>
+
+    <p><b>Số dư tài khoản (VNĐ):</b>
+      <span style="color:#d32f2f; font-weight:bold;"><%= user.vnd.toLocaleString() %>đ</span>
+    </p>
+
+    <div style="text-align:center; margin-top:20px;">
+      <a href="change-password" class="btn-change">
+        🔐 Đổi mật khẩu
+      </a>
+    </div>
   </div>
 
 </div>
 
-<%- include("partials/footer") %>
+<%- include("../partials/footer") %>

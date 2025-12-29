@@ -3,17 +3,14 @@ const pool = require("../config/db");
 exports.index = async (req, res) => {
   try {
     const [giftcodes] = await pool.execute("SELECT * FROM giftcode ORDER BY id DESC");
-    console.log("✅ DEBUG giftcodes[0]:", giftcodes[0]);
 
     const allItemIds = new Set();
     const allOptionIds = new Set();
 
     giftcodes.forEach(gc => {
   try {
-    console.log("✅ DEBUG raw listItem (id=" + gc.id + "):", gc.listItem);
 
     const items = JSON.parse(gc.listItem || "[]");
-    console.log("✅ DEBUG parsed items:", items);
 
     items.forEach(it => allItemIds.add(Number(it.id)));
 
@@ -79,7 +76,7 @@ exports.index = async (req, res) => {
       return { ...gc, rewardText };
     });
 
-    res.render("admin/giftcode/index", { giftcodes: result });
+    res.render("admin/giftcode/viewallgiftcode", { giftcodes: result });
 
   } catch (err) {
     console.error(err);
@@ -89,7 +86,7 @@ exports.index = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    res.render("admin/giftcode/create", {
+    res.render("admin/giftcode/creategiftcode", {
       msg: null
     });
   } catch (err) {
@@ -99,7 +96,7 @@ exports.create = async (req, res) => {
 };
 
 exports.store = async (req, res) => {
-  const conn = await pool.getConnection(); // ✅ lấy connection để transaction
+  const conn = await pool.getConnection(); 
   try {
     console.log("BODY POST:", req.body);
 
@@ -113,8 +110,6 @@ exports.store = async (req, res) => {
     const itemoption = options && options !== "" ? options : "[]";
 
     await conn.beginTransaction();
-
-    // ✅ lock bảng để tránh 2 admin tạo cùng lúc bị trùng id
     const [[row]] = await conn.query("SELECT MAX(id) AS maxId FROM giftcode FOR UPDATE");
 
     const newId = (row.maxId === null ? 0 : Number(row.maxId)) + 1;

@@ -2,12 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 
-const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth/auth");
 const homeRoutes = require("./routes/home");
-const userRoutes = require("./routes/user");
-const adminRoutes = require("./routes/admin");
-const adminGiftcodeRoutes = require("./routes/adminGiftcode");
-const adminApiRoutes = require("./routes/adminApi");
+const userRoutes = require("./routes/auth/user");
+const adminRoutes = require("./routes/auth/admin");
+const adminGiftcodeRoutes = require("./routes/admin/adminGiftcode");
+const adminApiRoutes = require("./routes/admin/adminApi");
+const adminAccountsRoutes = require("./routes/admin/adminAccounts");
 
 const session = require("express-session");
 
@@ -29,14 +30,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// ROUTES
+
 app.use("/", homeRoutes);
 app.use("/", authRoutes);
 app.use("/", userRoutes);
 app.use("/", adminRoutes);
 app.use("/", adminGiftcodeRoutes);
+app.use("/admin", adminAccountsRoutes);
 
-// ✅ Admin API
 app.use("/admin/api", adminApiRoutes);
 
 app.listen(process.env.PORT, "0.0.0.0", () => {

@@ -1,0 +1,499 @@
+<%- include("../partials/header", { title: "Quản lý tài khoản" }) %>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: linear-gradient(#86c5f8, #fff);
+    font-family: Arial;
+    overflow-x: hidden;
+  }
+
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 18px;
+    opacity: 0.9;
+    pointer-events: none;
+    animation: fallSnow linear infinite;
+    z-index: 1;
+  }
+  @keyframes fallSnow {
+    to { transform: translateY(110vh); opacity: 0.3; }
+  }
+
+  .tet-item {
+    position: fixed;
+    top: -30px;
+    font-size: 24px;
+    pointer-events: none;
+    animation: fallTet linear infinite;
+    opacity: 0.9;
+    z-index: 2;
+  }
+  @keyframes fallTet {
+    to { transform: translateY(120vh) rotate(360deg); opacity: 0.35; }
+  }
+
+  .spark {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: gold;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: sparkle 2s infinite;
+    z-index: 2;
+  }
+  @keyframes sparkle {
+    0% { transform: scale(0.5); opacity: 0.2; }
+    50% { transform: scale(1.4); opacity: 1; }
+    100% { transform: scale(0.5); opacity: 0.2; }
+  }
+
+  .tet-banner {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 8px 0;
+    background: rgba(220, 0, 0, 0.85);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    z-index: 999;
+    font-size: 15px;
+    animation: glow 1.5s infinite;
+  }
+  @keyframes glow {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+    100% { filter: brightness(1); }
+  }
+
+  
+  .admin-wrapper {
+    width: 100%;
+    max-width: 1280px;     
+    margin: 70px auto 25px;
+    display: flex;
+    gap: 18px;
+    padding: 0 15px;         
+    position: relative;
+    z-index: 10;
+    align-items: flex-start;
+  }
+
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: #ffcc80;
+    border-radius: 12px;
+    border: 2px solid #f57c00;
+    padding: 15px;
+    height: fit-content;
+  }
+
+  .sidebar h3 {
+    text-align: center;
+    margin: 0 0 15px;
+    color: #d84315;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 12px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+    background: #ffe0b2;
+    border: 1px solid #f57c00;
+    transition: 0.2s;
+  }
+
+  .sidebar a:hover {
+    background: #ffd180;
+    transform: translateX(3px);
+  }
+
+  .sidebar a.active {
+    background: #ff9800;
+    color: white;
+  }
+
+
+  .content {
+    flex: 1;
+    min-width: 0; 
+    background: #ffcc80;
+    border-radius: 12px;
+    border: 2px solid #f57c00;
+    padding: 18px;
+  }
+
+  .content h2 {
+    margin-top: 0;
+    color: #d84315;
+  }
+
+
+  .search-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .search-box input {
+    flex: 1;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #f57c00;
+    outline: none;
+  }
+
+  .search-box input:focus {
+    box-shadow: 0 0 0 3px rgba(245,124,0,0.25);
+  }
+
+  .search-box button {
+    height: 38px;
+    padding: 0 18px;
+    border-radius: 8px;
+    border: none;
+    background: #43a047;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .search-box button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px;
+    margin-top: 15px;
+    border: 1px solid #f57c00;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;  
+    min-width: 1100px;
+  }
+
+  th {
+    background: #ffe0b2;
+    padding: 10px;
+    border-bottom: 2px solid #f57c00;
+    color: #d84315;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  tr:hover td {
+    background: #fff3e0;
+  }
+
+  td.password-col {
+    min-width: 70px;
+    max-width: 300px;
+    word-break: break-all;
+    white-space: normal;
+    text-align: left;
+    font-size: 12px;
+  }
+
+  .badge {
+    padding: 3px 7px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+  }
+  .yes { background: #2e7d32; }
+  .no  { background: #c62828; }
+
+  .pagination {
+    margin-top: 15px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pagination a {
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    background: #ffe0b2;
+    border: 1px solid #f57c00;
+    color: #000;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+
+  .pagination a:hover {
+    background: #ffd180;
+    transform: translateY(-1px);
+  }
+
+  .pagination a.active {
+    background: #ff9800;
+    color: white;
+  }
+
+  @media(max-width:760px) {
+    .tet-banner { font-size: 13px; }
+    .admin-wrapper { flex-direction: column; }
+    .sidebar { width: 100%; }
+  }
+</style>
+
+<div class="tet-banner">
+  🧧 CHÚC MỪNG NĂM MỚI 2025 - ADMIN KHU VỰC 🎉 | Quản lý tài khoản - Quản lý hệ thống 🧧
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tetIcons = ["🌸","🌼","🧧","✨","🎇","🧨"];
+
+    for (let i = 0; i < 55; i++) {
+      let item = document.createElement("div");
+      item.className = "tet-item";
+      item.textContent = tetIcons[Math.floor(Math.random() * tetIcons.length)];
+      item.style.left = Math.random() * 100 + "%";
+      item.style.animationDuration = 4 + Math.random() * 7 + "s";
+      item.style.fontSize = (18 + Math.random() * 25) + "px";
+      item.style.animationDelay = Math.random() * 4 + "s";
+      document.body.appendChild(item);
+    }
+
+    for (let i = 0; i < 30; i++) {
+      let snow = document.createElement("div");
+      snow.className = "snowflake";
+      snow.textContent = "❄";
+      snow.style.left = Math.random() * 100 + "%";
+      snow.style.animationDuration = 4 + Math.random() * 6 + "s";
+      snow.style.fontSize = (12 + Math.random() * 18) + "px";
+      snow.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(snow);
+    }
+
+    for (let i = 0; i < 25; i++) {
+      let s = document.createElement("div");
+      s.className = "spark";
+      s.style.top = Math.random() * 100 + "vh";
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.animationDelay = Math.random() * 2 + "s";
+      document.body.appendChild(s);
+    }
+  });
+</script>
+
+<div class="admin-wrapper">
+  <div class="sidebar">
+    <h3>⚙ ADMIN MENU</h3>
+    <a href="/dashboard">📊 Tổng quan</a>
+    <a href="/admin/accounts" class="active">👤 Quản lý tài khoản</a>
+    <a href="/admin/topup">💰 Quản lý nạp tiền</a>
+    <a href="/admin/giftcode">🎁 Quản lý GiftCode</a>
+    <a href="/admin/server">🖥 Quản lý server</a>
+    <a href="/" style="background:#e53935; color:white; border:none;">⬅ Về trang chủ</a>
+  </div>
+
+  <div class="content">
+    <h2>👤 Quản lý tài khoản</h2>
+
+    <form class="search-box" method="GET" action="/admin/accounts">
+      <input type="text" name="search" value="<%= search %>" placeholder="Tìm kiếm username...">
+      <button type="submit">🔍 Tìm</button>
+    </form>
+
+    <p style="margin-top:10px;color:#6b4b2a;">
+      Trang <b><%= page %></b> / <b><%= totalPages %></b>
+    </p>
+
+    <hr style="border:1px solid #f57c00; margin:15px 0;">
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30px;">ID</th>
+            <th style="width:100px;">Username</th>
+            <th style="width:80px;">Password</th>
+            <th style="width:66px;">Admin</th>
+            <th style="width:60px;">Active</th>
+            <th style="width:60px;">Ban</th>
+            <th style="width:30px;">Tổng nạp</th>
+            <th style="width:90px;">Coin</th>
+            <th style="width:90px;">VND</th>
+            <th style="width:90px;">Mốc nạp</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% if (accounts.length === 0) { %>
+            <tr>
+              <td colspan="10" style="padding:20px;">Không tìm thấy tài khoản</td>
+            </tr>
+          <% } %>
+
+          <% accounts.forEach(acc => { %>
+            <tr>
+              <td><%= acc.id %></td>
+              <td><%= acc.username %></td>
+              <td class="password-col"><%= acc.password %></td>
+
+            <td>
+  <span 
+    class="badge <%= acc.admin == 1 ? 'yes' : 'no' %> btn-toggle"
+    data-id="<%= acc.id %>"
+    data-type="admin"
+    style="cursor:pointer;"
+  >
+    <%= acc.admin == 1 ? "ADMIN" : "USER" %>
+  </span>
+</td>
+
+
+              <td>
+  <span 
+    class="badge <%= acc.active == 1 ? 'yes' : 'no' %> btn-toggle"
+    data-id="<%= acc.id %>"
+    data-type="active"
+    style="cursor:pointer;"
+  >
+    <%= acc.active == 1 ? "ON" : "OFF" %>
+  </span>
+</td>
+
+
+             <td>
+  <span 
+    class="badge <%= acc.ban == 1 ? 'no' : 'yes' %> btn-toggle"
+    data-id="<%= acc.id %>"
+    data-type="ban"
+    style="cursor:pointer;"
+  >
+    <%= acc.ban == 1 ? "Đã BAN" : "Hoạt Động" %>
+  </span>
+</td>
+
+
+              <td><%= (acc.tongnap || 0).toLocaleString() %></td>
+              <td><%= (acc.coin || 0).toLocaleString() %></td>
+              <td><%= (acc.vnd || 0).toLocaleString() %></td>
+              <td><%= (acc.mocnap || 0).toLocaleString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="/admin/accounts?page=<%= page - 1 %>&search=<%= search %>">⬅</a>
+      <% } %>
+
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/admin/accounts?page=<%= i %>&search=<%= search %>"
+           class="<%= i === page ? 'active' : '' %>">
+           <%= i %>
+        </a>
+      <% } %>
+
+      <% if (page < totalPages) { %>
+        <a href="/admin/accounts?page=<%= page + 1 %>&search=<%= search %>">➡</a>
+      <% } %>
+    </div>
+
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleButtons = document.querySelectorAll(".btn-toggle");
+
+    toggleButtons.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        const type = btn.dataset.type;
+
+        let url = "";
+        if(type === "admin") url = `/admin/accounts/toggle-admin/${id}`;
+        if(type === "active") url = `/admin/accounts/toggle-active/${id}`;
+        if(type === "ban") url = `/admin/accounts/toggle-ban/${id}`;
+
+        btn.style.opacity = "0.5";
+
+        try {
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+          });
+
+          const data = await res.json();
+
+          btn.style.opacity = "1";
+
+          if(!data.success) {
+            alert("Có lỗi xảy ra!");
+            return;
+          }
+
+          if(type === "admin") {
+            btn.textContent = data.admin == 1 ? "ADMIN" : "USER";
+            btn.classList.toggle("yes", data.admin == 1);
+            btn.classList.toggle("no", data.admin != 1);
+          }
+
+          if(type === "active") {
+            btn.textContent = data.active == 1 ? "ON" : "OFF";
+            btn.classList.toggle("yes", data.active == 1);
+            btn.classList.toggle("no", data.active != 1);
+          }
+
+          if(type === "ban") {
+            btn.textContent = data.ban == 1 ? "Đã BAN" : "Hoạt Động";
+
+            btn.classList.toggle("no", data.ban == 1);
+            btn.classList.toggle("yes", data.ban != 1);
+          }
+
+        } catch (err) {
+          console.error(err);
+          btn.style.opacity = "1";
+          alert("Lỗi kết nối server!");
+        }
+      });
+    });
+  });
+</script>
+
+<%- include("../partials/footer") %>

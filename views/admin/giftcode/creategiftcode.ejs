@@ -1,4 +1,4 @@
-<%- include("../../partials/header", { title: "Tạo GiftCode" }) %>
+
 
 <style>
   body {
@@ -8,7 +8,6 @@
     overflow-x: hidden;
   }
 
-  /* ======== ❄ TUYẾT ======== */
   .snowflake {
     position: fixed;
     top: -10px;
@@ -27,7 +26,6 @@
     }
   }
 
-  /* ======== 🌸🌼🧧 HIỆU ỨNG TẾT RƠI ======== */
   .tet-item {
     position: fixed;
     top: -30px;
@@ -45,7 +43,6 @@
     }
   }
 
-  /* ======== ✨ SPARK ======== */
   .spark {
     position: fixed;
     width: 6px;
@@ -64,7 +61,6 @@
     100% { transform: scale(0.5); opacity: 0.2; }
   }
 
-  /* ======== BANNER ======== */
   .tet-banner {
     position: fixed;
     top: 0; left: 0;
@@ -85,7 +81,7 @@
     100% { filter: brightness(1); }
   }
 
-  /* Layout giống forum */
+
   .admin-wrapper {
     max-width: 1100px;
     margin: 70px auto 20px;
@@ -95,7 +91,7 @@
     z-index: 10;
   }
 
-  /* Sidebar */
+
   .sidebar {
     width: 260px;
     background: #ffcc80;
@@ -134,7 +130,7 @@
     color: white;
   }
 
-  /* Content */
+
   .content {
     flex: 1;
     background: #ffcc80;
@@ -167,7 +163,7 @@
     cursor: pointer;
   }
 
-  /* Dropdown results */
+
   .result-box {
     background: white;
     border: 1px solid #ccc;
@@ -195,7 +191,7 @@
   }
 </style>
 
-<!-- Banner -->
+
 <div class="tet-banner">
   🧧 ADMIN - TẠO GIFTCODE 🎉 | Tạo GiftCode nhanh - Search item theo tên - Không giới hạn ID 🧧
 </div>
@@ -239,7 +235,7 @@
 
 <div class="admin-wrapper">
 
-  <!-- Sidebar -->
+
   <div class="sidebar">
     <h3>⚙ ADMIN MENU</h3>
     <a href="/dashboard">📊 Tổng quan</a>
@@ -247,7 +243,6 @@
     <a href="/" style="background:#e53935; color:white; border:none;">⬅ Về trang chủ</a>
   </div>
 
-  <!-- Content -->
   <div class="content">
     <h2>➕ Tạo GiftCode mới</h2>
 
@@ -255,7 +250,7 @@
       <p style="color:red; font-weight:bold;"><%= msg %></p>
     <% } %>
 
-    <form method="POST" action="/admin/giftcode/create" onsubmit="beforeSubmit()">
+    <form method="POST" action="/admin/giftcode/creategiftcode" onsubmit="beforeSubmit()">
 
       <label>Mã GiftCode:</label>
       <input required name="code" placeholder="VD: TET2025VIP">
@@ -310,7 +305,6 @@
 
       <ul id="optionList" style="margin-top:10px;"></ul>
 
-      <!-- Hidden JSON -->
       <input type="hidden" name="items" id="itemsJson">
       <input type="hidden" name="options" id="optionsJson">
 
@@ -329,9 +323,6 @@
   let itemsArr = [];
   let optionsArr = [];
 
-  // =============================
-  // 🔍 SEARCH ITEM AJAX
-  // =============================
   const itemSearch = document.getElementById("itemSearch");
   const itemResults = document.getElementById("itemResults");
   const selectedItemId = document.getElementById("selectedItemId");
@@ -372,9 +363,6 @@
     }, 250);
   });
 
-  // =============================
-  // ➕ ADD ITEM
-  // =============================
   function addItem() {
     const id = parseInt(selectedItemId.value);
     const qty = parseInt(document.getElementById("qtyInput").value);
@@ -461,7 +449,6 @@
 
   optionsArr.forEach((op, index) => {
 
-    // ✅ Nếu name có "+#%" thì thay # thành param
     let displayText = op.name;
 
     if (displayText.includes("+#%")) {
@@ -469,7 +456,7 @@
     } else if (displayText.includes("+#")) {
       displayText = displayText.replace("+#", `+${op.param}`);
     } else {
-      // fallback
+    
       displayText = `+${op.param} ${displayText}`;
     }
 
@@ -485,8 +472,6 @@
   });
 }
 
-
-
   function removeOption(i) {
     optionsArr.splice(i, 1);
     renderOptions();
@@ -498,4 +483,3 @@
   }
 </script>
 
-<%- include("../../partials/footer") %>

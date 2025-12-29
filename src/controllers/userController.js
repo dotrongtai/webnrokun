@@ -17,7 +17,7 @@ exports.getProfile = async (req, res) => {
       return res.redirect("/");
     }
 
-    res.render("profile", {
+    res.render("user/profile", {
       user: rows[0]
     });
 
@@ -33,7 +33,7 @@ exports.getChangePassword = (req, res) => {
     return res.redirect("/login");
   }
 
-  res.render("change-password", {
+  res.render("user/change-password", {
     error: null,
     success: null
   });
@@ -48,7 +48,7 @@ exports.postChangePassword = async (req, res) => {
   const username = req.session.user.username;
 
   if (newPassword !== confirmPassword) {
-    return res.render("change-password", {
+    return res.render("user/change-password", {
       error: "Mật khẩu mới không khớp",
       success: null
     });
@@ -65,7 +65,7 @@ exports.postChangePassword = async (req, res) => {
     }
 
     if (rows[0].password !== oldPassword) {
-      return res.render("change-password", {
+      return res.render("user/change-password", {
         error: "Mật khẩu hiện tại không đúng",
         success: null
       });
@@ -76,7 +76,7 @@ exports.postChangePassword = async (req, res) => {
       [newPassword, username]
     );
 
-    res.render("change-password", {
+    res.render("user/change-password", {
       error: null,
       success: "Đổi mật khẩu thành công 🎉"
     });

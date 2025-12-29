@@ -85,14 +85,13 @@
   <div class="menu-buttons">
 
     <% if (!session || !session.user) { %>
-      <!-- CHƯA ĐĂNG NHẬP -->
+   
       <a class="btn-login" href="/login">🔐 Đăng nhập</a>
       <a class="btn-register" href="/register">📝 Đăng ký</a>
       <a class="btn-forgot" href="/forgot">🔑 Quên mật khẩu</a>
 
 <% } else { %>
 
-  <!-- Xin chào username (click vào để xem profile) -->
   <a href="/profile"
      style="background:#1b7bcc; cursor:pointer;">
     👋 Xin chào <%= session.user.username %>
@@ -103,12 +102,10 @@
   </a>
 <% } %>
 
-  <!-- Đổi mật khẩu -->
   <a class="btn-forgot" href="/change-password" style="background:#ff9800;">
     🔐 Đổi mật khẩu
   </a>
 
-  <!-- Đăng xuất -->
   <a class="btn-logout" href="/logout" style="background:#e53935;">
     🚪 Đăng xuất
   </a>
