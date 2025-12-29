@@ -1,35 +1,209 @@
 <%- include("../partials/header", { title: "Nạp tiền PayOS" }) %>
 
-<div style="max-width:500px; margin:30px auto; background:#fff; padding:20px; border-radius:10px;">
+<style>
+  body {
+    background: linear-gradient(#86c5f8, #fff);
+    font-family: Arial;
+  }
+
+  .topup-box {
+    max-width: 520px;
+    margin: 35px auto;
+    background: #ffcc80;
+    border: 2px solid #f57c00;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+
+  .topup-box h2 {
+    text-align:center;
+    margin:0;
+    color:#d84315;
+    font-size:22px;
+  }
+
+  .topup-box p {
+    text-align:center;
+    margin-top:8px;
+    margin-bottom:18px;
+    color:#6b4b2a;
+    font-size:14px;
+  }
+
+  .input-amount {
+    width:100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #f57c00;
+    font-size:15px;
+    outline:none;
+  }
+  .input-amount:focus {
+    box-shadow: 0 0 0 3px rgba(245,124,0,0.25);
+  }
+
+  .btn-topup {
+    width:100%;
+    margin-top:12px;
+    padding: 12px;
+    border:none;
+    border-radius: 10px;
+    background: #43a047;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+  }
+  .btn-topup:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+
+  .qr-box {
+    margin-top: 18px;
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid #f57c00;
+    text-align: center;
+    display:none;
+  }
+
+  .qr-box h3 {
+    margin:0;
+    font-size:18px;
+    color:#d84315;
+  }
+
+  .qr-box img {
+    width: 220px;
+    height: 220px;
+    margin-top: 14px;
+    border-radius: 12px;
+    border: 2px solid #ff9800;
+    padding: 6px;
+    background: #fff3e0;
+  }
+
+  .qr-info {
+    margin-top: 12px;
+    font-size: 13px;
+    color:#444;
+    line-height: 1.5;
+  }
+
+  .btn-open {
+    display:inline-block;
+    margin-top: 14px;
+    padding: 10px 14px;
+    background:#1e88e5;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+  }
+  .btn-open:hover {
+    filter:brightness(1.15);
+  }
+
+  .alert {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-weight:bold;
+    text-align:center;
+    display:none;
+  }
+  .alert.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+  .alert.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+
+</style>
+
+<div class="topup-box">
+
   <h2>💰 Nạp tiền PayOS</h2>
+  <p>Nhập số tiền cần nạp, hệ thống sẽ tạo QR thanh toán tự động</p>
 
-  <input id="amount" type="number" placeholder="Nhập số tiền" style="width:100%; padding:10px;">
-  <button id="btnTopup" style="margin-top:10px; width:100%; padding:10px; background:#1e88e5; color:white; border:none;">
-    Tạo QR thanh toán
-  </button>
+  <input id="amount" class="input-amount" type="number" min="1000" placeholder="Nhập số tiền (VD: 50000)">
+  <button id="btnTopup" class="btn-topup">📌 Tạo QR thanh toán</button>
 
-  <div id="result" style="margin-top:15px;"></div>
+  <div id="alert" class="alert"></div>
+
+  <div id="qrBox" class="qr-box">
+    <h3>📱 Quét QR để thanh toán</h3>
+    <img id="qrImage" src="" alt="QR PayOS">
+    <div class="qr-info" id="qrInfo"></div>
+    <a id="checkoutBtn" class="btn-open" href="#" target="_blank">🌐 Mở trang thanh toán PayOS</a>
+  </div>
+
 </div>
 
 <script>
-  document.getElementById("btnTopup").addEventListener("click", async () => {
+  const btnTopup = document.getElementById("btnTopup");
+  const alertBox = document.getElementById("alert");
+  const qrBox = document.getElementById("qrBox");
+  const qrImage = document.getElementById("qrImage");
+  const qrInfo = document.getElementById("qrInfo");
+  const checkoutBtn = document.getElementById("checkoutBtn");
+
+  function showAlert(type, msg){
+    alertBox.className = "alert " + type;
+    alertBox.style.display = "block";
+    alertBox.innerHTML = msg;
+  }
+
+  btnTopup.addEventListener("click", async () => {
     const amount = document.getElementById("amount").value;
 
-    const res = await fetch("/topup/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount })
-    });
+    alertBox.style.display = "none";
+    qrBox.style.display = "none";
 
-    const data = await res.json();
-
-    if (!data.success) {
-      document.getElementById("result").innerHTML = `<p style="color:red">${data.message}</p>`;
+    if(!amount || amount < 1000){
+      showAlert("error","❌ Số tiền phải >= 1000 VNĐ");
       return;
     }
 
-    // ✅ redirect sang PayOS checkout
-    window.location.href = data.checkoutUrl;
+    btnTopup.disabled = true;
+    btnTopup.innerText = "⏳ Đang tạo QR...";
+
+    try{
+      const res = await fetch("/topup/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount })
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        showAlert("error", "❌ " + data.message);
+        btnTopup.disabled = false;
+        btnTopup.innerText = "📌 Tạo QR thanh toán";
+        return;
+      }
+
+      // ✅ hiển thị QR ngay tại trang
+      qrBox.style.display = "block";
+      qrImage.src = data.qrCode; // base64 image
+      qrInfo.innerHTML = `
+        <b>Số tiền:</b> <span style="color:#d32f2f">${Number(data.amount).toLocaleString()}đ</span><br>
+        <b>Mã đơn:</b> ${data.orderCode}<br>
+        <b>Trạng thái:</b> <span style="color:#ff9800">Chờ thanh toán...</span>
+      `;
+
+      checkoutBtn.href = data.checkoutUrl;
+
+      showAlert("success", "✅ Tạo QR thành công! Vui lòng thanh toán để hệ thống cộng tiền.");
+
+    }catch(err){
+      console.error(err);
+      showAlert("error","❌ Lỗi server, thử lại sau.");
+    }
+
+    btnTopup.disabled = false;
+    btnTopup.innerText = "📌 Tạo QR thanh toán";
   });
 </script>
 
