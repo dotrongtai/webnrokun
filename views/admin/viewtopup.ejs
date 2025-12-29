@@ -252,8 +252,8 @@
             <% topups.forEach((t, index) => { %>
               <tr class="row"
                   data-username="<%= (t.username || '').toLowerCase() %>"
-                  data-ordercode="<%= (t.orderCode || '').toLowerCase() %>"
-                  data-transid="<%= (t.transId || '').toLowerCase() %>"
+                  data-ordercode="<%= String(t.orderCode || '').toLowerCase() %>"
+                  data-transid="<%= String(t.transId || '').toLowerCase() %>"
                   data-status="<%= (t.status || 'PENDING') %>">
 
                 <td><%= index + 1 %></td>
