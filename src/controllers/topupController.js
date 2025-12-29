@@ -30,11 +30,6 @@ exports.createTopup = async (req, res) => {
 
     const paymentLink = await payos.paymentRequests.create(paymentData);
 
-    let qrCode = paymentLink.qrCode;
-    if (qrCode && !qrCode.startsWith("data:image")) {
-      qrCode = "data:image/png;base64," + qrCode;
-    }
-
     await pool.execute(
       `INSERT INTO top_up(username, amount, orderCode, description, status, transId) 
        VALUES (?, ?, ?, ?, 'PENDING', NULL)`,
@@ -46,7 +41,7 @@ exports.createTopup = async (req, res) => {
       orderCode,
       amount,
       checkoutUrl: paymentLink.checkoutUrl,
-      qrCode
+      qrCode: paymentLink.qrCode
     });
 
   } catch (err) {
