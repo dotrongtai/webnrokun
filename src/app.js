@@ -25,8 +25,12 @@ app.use(express.static("public"));
 app.use(session({
   secret: "kunz-secret-key",
   resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 24*60*60*1000 }
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: "lax"
+  }
 }));
 
 app.use((req, res, next) => {

@@ -7,8 +7,14 @@ router.post("/register", authController.postRegister);
 router.get("/login", authController.getLogin);
 router.post("/login", authController.postLogin);
 router.get("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/");
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Logout error:", err);
+      return res.redirect("/");
+    }
+
+    res.clearCookie("connect.sid"); 
+    return res.redirect("/");
   });
 });
 
